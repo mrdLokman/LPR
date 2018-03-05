@@ -15,7 +15,7 @@ using namespace cv;
 
 
  //string cars = "C:/Users/lool/Desktop/PFE/dataset image/cars/*.bmp";
- string cars = "C:/Users/Merdji/Documents/Visual Studio 2015/Projects/PFE/cars";
+ string cars = "C:/Users/Merdji/Documents/Visual Studio 2015/Projects/cars";
 
 //*****************************************************************
  
