@@ -503,3 +503,22 @@ Mat operationsMorphologiques(Mat origine) {
 	//return opning;
 	//return opning_bin;
 }
+
+Mat unsharpFiltre(Mat origine) {
+	Mat blurred; 
+	double sigma = 1, threshold = 5, amount = 1;
+	
+	GaussianBlur(origine, blurred, Size(), sigma, sigma);
+	Mat lowConstrastMask = abs(origine - blurred) < threshold;
+	Mat sharpened = origine*(1 + amount) + blurred*(-amount);
+	origine.copyTo(sharpened, lowConstrastMask);
+
+	/*
+	imshow("origine", origine);
+	imshow("blurred", blurred);
+	imshow("lowConstrastMask", lowConstrastMask);
+	imshow("sharpened", sharpened);
+	*/
+
+	return sharpened;
+}

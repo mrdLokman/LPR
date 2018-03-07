@@ -52,20 +52,28 @@ using namespace cv;
 		 line(p, points[3], points[0], Scalar(0, 0, 255));
 		 imshow("plaque", p);
 
+		 imwrite("input/1-source.png",p);
 		 // traitement de la plaque 
 
 		 //1-extraction de la Plaque
 		 Mat crop = extractionDePlaque(src, points);
+		 imwrite("input/2-plaque.png", crop);
 		 windows.push_back(crop);
 
 		 //2-rotation plaque
 		 Mat rotCrop = correctionRotation(crop, points);
+		 imwrite("input/3-rotation.png",rotCrop);
 		 windows.push_back(rotCrop);
 
 		 //3-ajuter la plaque (rotation)
 		 Mat ajustee = correctionInclinaisonEliminerBordure(rotCrop);
+		 imwrite("input/4-ajustee.png",ajustee);
 		 windows.push_back(ajustee);
 
+		 //ameliorer le contraste de la plaque
+		 Mat sharped = unsharpFiltre(ajustee);
+		 windows.push_back(sharped);
+		 imwrite("input/5-sharped.png", sharped);
 
 		 //4-normalisation egalisation d'histogramme
 			//calcule histogramme source
@@ -77,7 +85,7 @@ using namespace cv;
 		 const float *ranges[] = { range };
 		 int chnls[] = { 0 };
 
-		 calcHist(&ajustee, 1, chnls, Mat(), hist, 1, hsize, ranges);
+		 calcHist(&sharped, 1, chnls, Mat(), hist, 1, hsize, ranges);
 		 histImg = imgHist(hist, 3, 3);
 		 windows.push_back(histImg);
 			//normalisation
@@ -95,16 +103,17 @@ using namespace cv;
 		 //Mat hist_normalisee = normalisation(binaire_eq_hist_gauss, 50);
 
 
-		 Mat binaire_gauss = binarisation(ajustee, B_A_GAUSS, Blur_GAUSS);
+		 Mat binaire_gauss = binarisation(sharped, B_A_GAUSS, Blur_GAUSS);
 		 windows.push_back(binaire_gauss);
+		 imwrite("input/6-binaire.png", binaire_gauss);
 
 		 Mat normalisee = normalisation(binaire_gauss, 50);
 		 windows.push_back(normalisee);
-
-		 imwrite("input/binaire.png", normalisee);
+		 imwrite("input/7-normalisee.png", normalisee);
 
 		 Mat resultat = operationsMorphologiques(normalisee);
 		 windows.push_back(resultat);
+		 imwrite("input/8-oprsMorphs.png", resultat);
 
 		 //Mat binaire_eq_hist_otsu = binarisation(normCrop, B_G_OTSU, Blur_GAUSS);
 		 //Mat binaire_otsu = binarisation(ajustee, B_A_GAUSS, Blur_GAUSS);
