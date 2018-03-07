@@ -93,3 +93,9 @@ vector<Mat> testSegmentationACC(Mat bin) {
 void testHistogrammeProjection(string image) {
 	histogrammeImage(image);
 }
+
+
+void testOprsMorph(string img) {
+	Mat src = imread(img, 0);
+	Mat dest = operationsMorphologiques(src);
+}

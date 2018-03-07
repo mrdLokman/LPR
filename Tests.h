@@ -25,4 +25,6 @@ void testSegmentationACC(string image);
 vector<Mat> testSegmentationACC(Mat bin);
 
 void testHistogramme(string image);
+
+void testOprsMorph(string img);
 #endif

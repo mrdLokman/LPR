@@ -29,33 +29,9 @@ void test() {
 
 int main1()
 {
-	Mat src= imread("C:/Users/lool/PFE/PFE/output/segACC/000000.png", 0);
-	// the first command-line parameter must be a filename of the binary
-	// (black-n-white) image
 	
+	testOprsMorph("input/binaire.png");
 
-	Mat dst = Mat::zeros(src.rows, src.cols, CV_8UC3);
-
-	src = src > 1;
-	namedWindow("Source", 1);
-	imshow("Source", src);
-
-	vector<vector<Point> > contours;
-	vector<Vec4i> hierarchy;
-
-	findContours(src, contours, hierarchy,CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE,Point(0,0));
-
-	// iterate through all the top-level contours,
-	// draw each connected component with its own random color
-	int idx = 0;
-	for (int i = 0; i < contours.size();i++)
-	{
-		Scalar color(rand() & 255, rand() & 255, rand() & 255);
-		drawContours(dst, contours, i, color, 1, 8, hierarchy,0);
-	}
-
-	namedWindow("Components", 1);
-	imshow("Components", dst);
 	waitKey(0);
 	return 0;
 }

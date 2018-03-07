@@ -103,13 +103,16 @@ using namespace cv;
 
 		 imwrite("input/binaire.png", normalisee);
 
+		 Mat resultat = operationsMorphologiques(normalisee);
+		 windows.push_back(resultat);
+
 		 //Mat binaire_eq_hist_otsu = binarisation(normCrop, B_G_OTSU, Blur_GAUSS);
 		 //Mat binaire_otsu = binarisation(ajustee, B_A_GAUSS, Blur_GAUSS);
 		
 		// testSegmentationProjection("input/binaire.png");
-		 imshow("segmentation projection", display_images(testSegmentationProjection(normalisee),80,1));
+		 imshow("segmentation projection", display_images(testSegmentationProjection(resultat),80,1));
 		 //testSegmentationACC("input/binaire.png");
-		 imshow("segmentation CCA", display_images(testSegmentationACC(normalisee), 80, 1));
+		 imshow("segmentation CCA", display_images(testSegmentationACC(resultat), 80, 1));
 
 		 imshow("pretraitement", display_images(windows, 1000, 6));
 

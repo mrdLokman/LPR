@@ -437,5 +437,69 @@ Mat normalisation(Mat origine, int hauteurNorm) {
 }
 
 Mat operationsMorphologiques(Mat origine) {
-	return Mat();
+	Mat opening, closing, eroded, delated;
+	
+	/*
+	types:
+		0 -> RECT
+		1 -> CROSS
+		2 -> ELIPSE
+	*/
+
+	int typeErode = 0;
+	Mat elementErode = getStructuringElement(typeErode, Size(2, 4), Point(0, 0));
+
+	erode(origine, eroded, elementErode);
+	
+
+	int typeDilation = 0;
+	Mat elementDelate = getStructuringElement(typeErode, Size(4, 6), Point(0, 0));
+
+	dilate(origine, delated, elementDelate);
+	
+
+	dilate(eroded, opening, elementDelate);
+	
+	Mat opning_bin;
+	//threshold(opening, opning_bin, 200, 255, THRESH_BINARY);
+	adaptiveThreshold(opening, opning_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
+
+	erode(delated, closing, elementErode);
+	
+
+	Mat closing_bin;
+	//threshold(closing, closing_bin, 254, 255, THRESH_BINARY);
+	adaptiveThreshold(closing, closing_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
+
+	Mat d_bin;
+	//threshold(delated, d_bin, 254, 255, THRESH_BINARY);
+	adaptiveThreshold(delated, d_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
+
+	Mat bin_closing;
+	Mat elementErode_bin = getStructuringElement(typeErode, Size(3, 3), Point(0, 0));
+	erode(d_bin, bin_closing, elementErode_bin);
+
+	Mat bin_closing_bin;
+	//threshold(bin_closing, bin_closing_bin, 1, 255, THRESH_BINARY);
+	adaptiveThreshold(bin_closing, bin_closing_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
+	
+	/*
+	imshow("source", origine);
+	imshow("eroded", eroded);
+	imshow("delated", delated);
+	imshow("opning", opening);
+	imshow("opning_bin", opning_bin);
+	imshow("closing", closing);
+	imshow("closing_bin", closing_bin);
+	imshow("delated binaire", d_bin);
+	imshow("bin_closing", bin_closing);
+	imshow("bin_closing_bin", bin_closing_bin);
+	*/
+
+	//return bin_closing_bin;
+	//return bin_closing;
+	//return closing;
+	return closing_bin;
+	//return opning;
+	//return opning_bin;
 }
