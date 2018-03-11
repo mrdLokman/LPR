@@ -28,5 +28,10 @@ void testHistogramme(string image);
 void testBordure();
 
 void testOprsMorph(string img);
+
 void testUnsharpeFiltre(string img);
+void testUnsharpeFiltre2(string img);
+
+void filtre();
+void testFiltrePersonnel(string img);
 #endif

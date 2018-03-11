@@ -413,7 +413,7 @@ Mat binarisation(Mat origine, int type, int filtre) {
 		adaptiveThreshold(origine, binaire, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 21, 2);
 	if(type == 2)
 		threshold(origine, binaire, 0, 255, THRESH_BINARY | THRESH_OTSU);
-	if (type == 2)
+	if (type == 3)
 		threshold(origine, binaire, 150, 255, THRESH_BINARY);
 	
 
@@ -505,20 +505,75 @@ Mat operationsMorphologiques(Mat origine) {
 }
 
 Mat unsharpFiltre(Mat origine) {
-	Mat blurred; 
-	double sigma = 1, threshold = 5, amount = 1;
-	
-	GaussianBlur(origine, blurred, Size(), sigma, sigma);
-	Mat lowConstrastMask = abs(origine - blurred) < threshold;
-	Mat sharpened = origine*(1 + amount) + blurred*(-amount);
+	Mat blurred, blurred1;
+	double thresholdBilateral = 2, amountBilateral = 8;
+	int winSize = 17, segmaColor = 80, segmaSpace = 80;
+	double sigmaUnsharp = 1, thresholdUnsharp = 5, amountUnsharp = 1;
+
+	// using BelateralFilter
+	Mat bFilter;
+	bilateralFilter(origine, bFilter, winSize, segmaColor, segmaSpace);
+	Mat lowConstrastMask1 = abs(origine - bFilter) < thresholdBilateral;
+	Mat sharpened1 = origine*(1 + amountBilateral) + bFilter*(-amountBilateral);
+	origine.copyTo(sharpened1, lowConstrastMask1);
+
+	// using GaussianBlure
+	GaussianBlur(origine, blurred, Size(), sigmaUnsharp, sigmaUnsharp);
+	Mat lowConstrastMask = abs(origine - blurred) < thresholdUnsharp;
+	Mat sharpened = origine*(1 + amountUnsharp) + blurred*(-amountUnsharp);
 	origine.copyTo(sharpened, lowConstrastMask);
 
 	/*
 	imshow("origine", origine);
+
 	imshow("blurred", blurred);
 	imshow("lowConstrastMask", lowConstrastMask);
+
+	imshow("bFilter", bFilter);
+	imshow("lowConstrastMask1", lowConstrastMask1);
+
 	imshow("sharpened", sharpened);
+	imshow("sharpened1", sharpened1);
 	*/
 
 	return sharpened;
+}
+
+Mat unsharpFiltre2(Mat origine) {
+	Mat blured, sharped;
+	GaussianBlur(origine, blured, cv::Size(0, 0), 3);
+	addWeighted(origine, 3, blured, -2, 0, sharped);
+	return sharped;
+}
+
+
+
+Mat filtrePersonnel(Mat src, Mat& dest, int segma, Size winSize) {
+	int w = src.cols, h = src.rows;
+	src.copyTo(dest);
+
+	for (int i = 0; i < h; i++){
+		for (int j = 0; j < w; j++) {
+			int minRow = i - winSize.height < 0 ? 0 : i - winSize.height;
+			int maxRow = i + winSize.height > h ? h : i + winSize.height;
+			
+			int minCol = j - winSize.width < 0 ? 0 : j - winSize.width;
+			int maxCol = j + winSize.width > w ? w : j + winSize.width;
+
+			int value = src.at<unsigned char>(i, j) + segma;
+
+			int k = minRow;
+			while (k < h && k < maxRow) {
+				int l = minCol;
+				while (l < w && l < maxCol) {
+					if (src.at<unsigned char>(k, l) > value)
+						dest.at<unsigned char>(k, l) = 255;
+					l++;
+				}
+				k++;
+			}
+		}
+	}
+
+	return dest;
 }

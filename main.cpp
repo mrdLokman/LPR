@@ -70,12 +70,18 @@ using namespace cv;
 		 imwrite("input/4-ajustee.png",ajustee);
 		 windows.push_back(ajustee);
 
-		 //ameliorer le contraste de la plaque
-		 Mat sharped = unsharpFiltre(ajustee);
-		 windows.push_back(sharped);
-		 imwrite("input/5-sharped.png", sharped);
+		 //4-ameliorer le contraste de la plaque
+		 Mat sharped;
 
-		 //4-normalisation egalisation d'histogramme
+		 sharped = unsharpFiltre2(ajustee);
+		 windows.push_back(sharped);
+		 imwrite("input/5-sharped1.png", sharped);
+
+		 //filtrePersonnel(ajustee, sharped, 50, Size(5, 2));
+	     //windows.push_back(sharped);
+		 //imwrite("input/5-sharped2.png", sharped);
+
+		 //5- egalisation d'histogramme
 			//calcule histogramme source
 		 MatND hist;
 		 Mat histImg;
@@ -96,6 +102,12 @@ using namespace cv;
 		 //histImg = imgHist(hist, 3, 3);
 		 //windows.push_back(histImg);
 		 
+		 //5-nomalisation
+
+		 Mat normalisee = normalisation(sharped, 50);
+		 windows.push_back(normalisee);
+		 imwrite("input/6-normalisee.png", normalisee);
+
 		 //5-binarisation
 
 		 //Mat binaire_eq_hist_gauss = binarisation(normCrop,B_A_GAUSS,Blur_GAUSS);
@@ -103,27 +115,28 @@ using namespace cv;
 		 //Mat hist_normalisee = normalisation(binaire_eq_hist_gauss, 50);
 
 
-		 Mat binaire_gauss = binarisation(sharped, B_A_GAUSS, Blur_GAUSS);
-		 windows.push_back(binaire_gauss);
-		 imwrite("input/6-binaire.png", binaire_gauss);
+		 Mat binaire = binarisation(normalisee, B_G_OTSU, No_Blur);
+		 windows.push_back(binaire);
+		 imwrite("input/7-binaire.png", binaire);
 
-		 Mat normalisee = normalisation(binaire_gauss, 50);
-		 windows.push_back(normalisee);
-		 imwrite("input/7-normalisee.png", normalisee);
-
-		 Mat resultat = operationsMorphologiques(normalisee);
+		 //6-operations morphoogiques
+		 Mat resultat = operationsMorphologiques(binaire);
 		 windows.push_back(resultat);
 		 imwrite("input/8-oprsMorphs.png", resultat);
-
-		 //Mat binaire_eq_hist_otsu = binarisation(normCrop, B_G_OTSU, Blur_GAUSS);
-		 //Mat binaire_otsu = binarisation(ajustee, B_A_GAUSS, Blur_GAUSS);
 		
+
+		 // affichage résultats
+		 imshow("pretraitement", display_images(windows, 1000, 6));
+
+
+		 //Segmentation
+
 		// testSegmentationProjection("input/binaire.png");
 		 imshow("segmentation projection", display_images(testSegmentationProjection(resultat),80,1));
 		 //testSegmentationACC("input/binaire.png");
 		 imshow("segmentation CCA", display_images(testSegmentationACC(resultat), 80, 1));
 
-		 imshow("pretraitement", display_images(windows, 1000, 6));
+		 
 
 		 waitKey(0);
 		 cvDestroyWindow("pretraitement");

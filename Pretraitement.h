@@ -56,4 +56,7 @@ Mat normalisation(Mat origine, int hauteurNorm);
 Mat operationsMorphologiques(Mat origine);
 
 Mat unsharpFiltre(Mat origine);
+Mat unsharpFiltre2(Mat origine);
+
+Mat filtrePersonnel(Mat src, Mat& dest, int segma, Size winSize);
 #endif

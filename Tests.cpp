@@ -127,4 +127,32 @@ void testOprsMorph(string img) {
 void testUnsharpeFiltre(string img) {
 	Mat src = imread(img, 0);
 	Mat dest = unsharpFiltre(src);
+	imshow("source1", src);
+	imshow("filtre1", dest);
+}
+
+void testUnsharpeFiltre2(string img) {
+	Mat src = imread(img, 0);
+	Mat dest = unsharpFiltre(src);
+	imshow("source2", src);
+	imshow("filtre2", dest);
+}
+
+void filtre() {
+
+	Mat src = imread("input/4-ajustee.png");
+	Mat dst;
+	bilateralFilter(src, dst, 15, 80, 80);
+
+	imshow("source", src);
+	imshow("dest", dst);
+
+}
+
+void testFiltrePersonnel(string img) {
+	Mat src = imread(img, 0),dest;
+	filtrePersonnel(src, dest, 50, Size(5, 5));
+
+	imshow("source", src);
+	imshow("filtre", dest);
 }
