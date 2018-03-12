@@ -437,5 +437,143 @@ Mat normalisation(Mat origine, int hauteurNorm) {
 }
 
 Mat operationsMorphologiques(Mat origine) {
-	return Mat();
+	Mat opening, closing, eroded, delated;
+	
+	/*
+	types:
+		0 -> RECT
+		1 -> CROSS
+		2 -> ELIPSE
+	*/
+
+	int typeErode = 0;
+	Mat elementErode = getStructuringElement(typeErode, Size(2, 4), Point(0, 0));
+
+	erode(origine, eroded, elementErode);
+	
+
+	int typeDilation = 0;
+	Mat elementDelate = getStructuringElement(typeErode, Size(4, 6), Point(0, 0));
+
+	dilate(origine, delated, elementDelate);
+	
+
+	dilate(eroded, opening, elementDelate);
+	
+	Mat opning_bin;
+	//threshold(opening, opning_bin, 200, 255, THRESH_BINARY);
+	adaptiveThreshold(opening, opning_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
+
+	erode(delated, closing, elementErode);
+	
+
+	Mat closing_bin;
+	//threshold(closing, closing_bin, 254, 255, THRESH_BINARY);
+	adaptiveThreshold(closing, closing_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
+
+	Mat d_bin;
+	//threshold(delated, d_bin, 254, 255, THRESH_BINARY);
+	adaptiveThreshold(delated, d_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
+
+	Mat bin_closing;
+	Mat elementErode_bin = getStructuringElement(typeErode, Size(3, 3), Point(0, 0));
+	erode(d_bin, bin_closing, elementErode_bin);
+
+	Mat bin_closing_bin;
+	//threshold(bin_closing, bin_closing_bin, 1, 255, THRESH_BINARY);
+	adaptiveThreshold(bin_closing, bin_closing_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
+	
+	/*
+	imshow("source", origine);
+	imshow("eroded", eroded);
+	imshow("delated", delated);
+	imshow("opning", opening);
+	imshow("opning_bin", opning_bin);
+	imshow("closing", closing);
+	imshow("closing_bin", closing_bin);
+	imshow("delated binaire", d_bin);
+	imshow("bin_closing", bin_closing);
+	imshow("bin_closing_bin", bin_closing_bin);
+	*/
+
+	//return bin_closing_bin;
+	//return bin_closing;
+	//return closing;
+	return closing_bin;
+	//return opning;
+	//return opning_bin;
+}
+
+Mat unsharpFiltre(Mat origine) {
+	Mat blurred, blurred1;
+	double thresholdBilateral = 2, amountBilateral = 8;
+	int winSize = 17, segmaColor = 80, segmaSpace = 80;
+	double sigmaUnsharp = 1, thresholdUnsharp = 5, amountUnsharp = 1;
+
+	// using BelateralFilter
+	Mat bFilter;
+	bilateralFilter(origine, bFilter, winSize, segmaColor, segmaSpace);
+	Mat lowConstrastMask1 = abs(origine - bFilter) < thresholdBilateral;
+	Mat sharpened1 = origine*(1 + amountBilateral) + bFilter*(-amountBilateral);
+	origine.copyTo(sharpened1, lowConstrastMask1);
+
+	// using GaussianBlure
+	GaussianBlur(origine, blurred, Size(), sigmaUnsharp, sigmaUnsharp);
+	Mat lowConstrastMask = abs(origine - blurred) < thresholdUnsharp;
+	Mat sharpened = origine*(1 + amountUnsharp) + blurred*(-amountUnsharp);
+	origine.copyTo(sharpened, lowConstrastMask);
+
+	/*
+	imshow("origine", origine);
+
+	imshow("blurred", blurred);
+	imshow("lowConstrastMask", lowConstrastMask);
+
+	imshow("bFilter", bFilter);
+	imshow("lowConstrastMask1", lowConstrastMask1);
+
+	imshow("sharpened", sharpened);
+	imshow("sharpened1", sharpened1);
+	*/
+
+	return sharpened;
+}
+
+Mat unsharpFiltre2(Mat origine) {
+	Mat blured, sharped;
+	GaussianBlur(origine, blured, cv::Size(0, 0), 3);
+	addWeighted(origine, 3, blured, -2, 0, sharped);
+	return sharped;
+}
+
+
+
+Mat filtrePersonnel(Mat src, Mat& dest, int segma, Size winSize) {
+	int w = src.cols, h = src.rows;
+	src.copyTo(dest);
+
+	for (int i = 0; i < h; i++){
+		for (int j = 0; j < w; j++) {
+			int minRow = i - winSize.height < 0 ? 0 : i - winSize.height;
+			int maxRow = i + winSize.height > h ? h : i + winSize.height;
+			
+			int minCol = j - winSize.width < 0 ? 0 : j - winSize.width;
+			int maxCol = j + winSize.width > w ? w : j + winSize.width;
+
+			int value = src.at<unsigned char>(i, j) + segma;
+
+			int k = minRow;
+			while (k < h && k < maxRow) {
+				int l = minCol;
+				while (l < w && l < maxCol) {
+					if (src.at<unsigned char>(k, l) > value)
+						dest.at<unsigned char>(k, l) = 255;
+					l++;
+				}
+				k++;
+			}
+		}
+	}
+
+	return dest;
 }
