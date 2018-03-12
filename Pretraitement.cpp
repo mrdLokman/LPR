@@ -413,7 +413,7 @@ Mat binarisation(Mat origine, int type, int filtre) {
 		adaptiveThreshold(origine, binaire, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 21, 2);
 	if(type == 2)
 		threshold(origine, binaire, 0, 255, THRESH_BINARY | THRESH_OTSU);
-	if (type == 2)
+	if (type == 3)
 		threshold(origine, binaire, 150, 255, THRESH_BINARY);
 	
 
