@@ -126,7 +126,7 @@ map<string, int> CBN::interval(map<string, double> data){
 
 		vector<double> seuils = intervals_attributs[attribut];
 		int i = 0;
-		while (i < seuils.size() && valeur < seuils.at(i)) i++;
+		while (i < seuils.size() && seuils.at(i) < valeur) i++;
 		interval[attribut] = i;
 	}
 
