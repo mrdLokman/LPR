@@ -28,6 +28,8 @@ public:
 
 	void chargerApprentissage(string file_name);
 
+	vector<int> interval(vector<double> data);
+
 };
 
 #endif

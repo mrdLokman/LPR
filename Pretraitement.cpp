@@ -447,13 +447,13 @@ Mat operationsMorphologiques(Mat origine) {
 	*/
 
 	int typeErode = 0;
-	Mat elementErode = getStructuringElement(typeErode, Size(2, 4), Point(0, 0));
+	Mat elementErode = getStructuringElement(typeErode, Size(4, 4), Point(0, 0));
 
 	erode(origine, eroded, elementErode);
 	
 
 	int typeDilation = 0;
-	Mat elementDelate = getStructuringElement(typeErode, Size(4, 6), Point(0, 0));
+	Mat elementDelate = getStructuringElement(typeErode, Size(4, 4), Point(0, 0));
 
 	dilate(origine, delated, elementDelate);
 	
@@ -483,18 +483,18 @@ Mat operationsMorphologiques(Mat origine) {
 	//threshold(bin_closing, bin_closing_bin, 1, 255, THRESH_BINARY);
 	adaptiveThreshold(bin_closing, bin_closing_bin, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 2);
 	
-	/*
-	imshow("source", origine);
-	imshow("eroded", eroded);
-	imshow("delated", delated);
-	imshow("opning", opening);
-	imshow("opning_bin", opning_bin);
-	imshow("closing", closing);
-	imshow("closing_bin", closing_bin);
-	imshow("delated binaire", d_bin);
-	imshow("bin_closing", bin_closing);
-	imshow("bin_closing_bin", bin_closing_bin);
-	*/
+	
+	//imshow("source", origine);
+	//imshow("eroded", eroded);
+	//imshow("delated", delated);
+	//imshow("opning", opening);
+	//imshow("opning_bin", opning_bin);
+	//imshow("closing", closing);
+	//imshow("closing_bin", closing_bin);
+	//imshow("delated binaire", d_bin);
+	//imshow("bin_closing", bin_closing);
+	//imshow("bin_closing_bin", bin_closing_bin);
+	
 
 	//return bin_closing_bin;
 	//return bin_closing;

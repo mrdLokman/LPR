@@ -53,12 +53,17 @@ vector<Composant> segmentationProjection(Mat plaque) {
 			}
 
 			Composant c;
-			c.hauteur = finY - startY + 1;
-			c.largeur = finX - startX + 1;
+			//c.hauteur = finY - startY + 1;
+			//c.largeur = finX - startX + 1;
+			//c.positionX = startX;
+			//c.positionY = startY;
 			c.ordreHorizontal = composants.size() + 1;
-			c.positionX = startX;
-			c.positionY = startY;
-			Mat m(plaque, Rect(startX, startY, c.largeur, c.hauteur));
+			c.debutX = startX;
+			c.finX = finX;
+			c.debutY = startY;
+			c.finY = finY;
+
+			Mat m(plaque, Rect(startX, 0, finX - startX + 1, h));
 			m.copyTo(c.data);
 
 			composants.push_back(c);
@@ -126,12 +131,18 @@ Composant crop(Mat src) {
 
 	Composant c;
 
-	c.hauteur = finY - startY + 1;
-	c.largeur = finX - startX + 1;
+	//c.hauteur = finY - startY + 1;
+	//c.largeur = finX - startX + 1;
+	//c.positionX = startX;
+	//c.positionY = startY;
+
 	c.ordreHorizontal = 0;
-	c.positionX = startX;
-	c.positionY = startY;
-	Mat m(src, Rect(startX, startY, c.largeur, c.hauteur));
+	c.debutX = startX;
+	c.finX = finX;
+	c.debutY = startY;
+	c.finY = finY;
+
+	Mat m(src, Rect(startX, 0, finX - startX + 1, h));
 	m.copyTo(c.data);
 
 
