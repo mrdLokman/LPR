@@ -4,15 +4,19 @@
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
 
+#include <map>
+#include <iostream>
+#include <string>
+
+using namespace std;
+using namespace cv;
+
 class Composant
 {
 public:
 
-	cv::Mat data;
-	//double positionX;
-	//double positionY;
-	//double largeur;
-	//double hauteur;
+	Mat data;
+	map<string, double> attributs;
 	int ordreHorizontal;
 	double debutX;
 	double finX;
@@ -24,8 +28,8 @@ public:
 	~Composant();
 
 	double ratio();
-	double surface();
 	double densite();
+	double portionHauteur();
 
 
 };

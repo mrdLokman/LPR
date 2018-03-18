@@ -9,18 +9,28 @@ Composant::~Composant() {
 
 }
 
-double Composant::ratio()
-{
-	return (finX - debutX)/(finY - debutY);
+double Composant::ratio(){
+	
+	if (attributs.find("ratio") == attributs.end())
+		attributs["ratio"] = (finX - debutX) / (finY - debutY);
+	
+	return attributs["ratio"];
 }
 
-double Composant::surface()
-{
-	return (finX - debutX)*(finY - debutY);
+double Composant::densite(){
+
+	if (attributs.find("densite") == attributs.end()) {
+		int nbrPixelBlanc = countNonZero(data);
+		attributs["densite"] = 1.0 - ((double)nbrPixelBlanc) / ((double)((finX - debutX)*(finY - debutY)));
+	}
+
+	return attributs["densite"];
 }
 
-double Composant::densite()
-{
-	int nbrPixelBlanc = countNonZero(data);
-	return 1.0 - ((double)nbrPixelBlanc)/surface();
+double Composant::portionHauteur() {
+	if (attributs.find("ph") == attributs.end()) {
+		attributs["ph"] = ((double)(finY - debutY)) / ((double)data.rows);
+	}
+
+	return attributs["ph"];
 }
