@@ -53,10 +53,6 @@ vector<Composant> segmentationProjection(Mat plaque) {
 			}
 
 			Composant c;
-			//c.hauteur = finY - startY + 1;
-			//c.largeur = finX - startX + 1;
-			//c.positionX = startX;
-			//c.positionY = startY;
 			c.ordreHorizontal = composants.size() + 1;
 			c.debutX = startX;
 			c.finX = finX;
@@ -130,12 +126,6 @@ Composant crop(Mat src) {
 	}
 
 	Composant c;
-
-	//c.hauteur = finY - startY + 1;
-	//c.largeur = finX - startX + 1;
-	//c.positionX = startX;
-	//c.positionY = startY;
-
 	c.ordreHorizontal = 0;
 	c.debutX = startX;
 	c.finX = finX;
@@ -155,7 +145,7 @@ vector<Composant> segmentationACC(Mat plaque) {
 	Mat bw = plaque < 250;
 	Mat labelImage(plaque.size(), CV_32S);
 	int nLabels = connectedComponents(bw, labelImage, 4);
-	cout << "nombre de composantes connexes : " << nLabels - 1 << endl;
+	//cout << "nombre de composantes connexes : " << nLabels - 1 << endl;
 
 	vector<Mat> comps(nLabels - 1);
 	for (int i = 0; i < nLabels - 1; i++){

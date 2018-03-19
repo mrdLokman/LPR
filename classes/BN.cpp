@@ -87,6 +87,7 @@ void CBN::chargerReseau(string file_name){
 	getline(in_state_, commentaire);
 
 	while (getline(in_state_, value)) {
+		getline(in_state_, value);
 		//nom de l'attribut
 		string nomAttr = value;
 		label_attributs.push_back(nomAttr);

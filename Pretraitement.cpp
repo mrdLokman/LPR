@@ -426,7 +426,7 @@ Mat normalisation(Mat origine, int hauteurNorm) {
 	int hauteur = origine.rows;
 
 	double scale = ((double)hauteurNorm) / ((double)hauteur);
-	cout << "scale = " << scale << endl;
+	//cout << "scale = " << scale << endl;
 
 	int largeurNorm = origine.cols * scale;
 

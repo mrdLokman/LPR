@@ -7,9 +7,6 @@ Selector::Selector()
 {
 	
 }
-
-
-
 Selector::~Selector()
 {
 }
@@ -64,20 +61,3 @@ Point * Selector::getPlaqueCorners(Mat img)
 	cvWaitKey(0);
 	return corner_list;
 }
-
-
-Mat Selector::cropImage(Mat src, Point* coins) {
-	// coins[0] top left corner ,  coins[1] top right corner ,  coins[2] bottom right corner ,  coins[3] bottom left corner
-	int xmin = coins[0].x < coins[3].x ? coins[0].x : coins[3].x;
-	int xmax = coins[1].x < coins[2].x ? coins[2].x : coins[1].x;
-	int ymin = coins[0].y < coins[1].y ? coins[0].y : coins[1].y;
-	int ymax = coins[2].y < coins[3].y ? coins[3].y : coins[2].y;
-
-	int w = xmax - xmin + 1;
-	int h = ymax - ymin + 1;
-	//cout << "width = " << w << " ;heigth = " << h << endl;
-	 Mat plaque(src, Rect(xmin, ymin, w, h)); 
-	return plaque;
-}
-
-
