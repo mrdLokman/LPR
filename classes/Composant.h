@@ -17,7 +17,7 @@ public:
 	Mat data;
 
 	map<string, double> attributs;
-<<<<<<< HEAD
+
 	vector<vector<cv::Point>>contours;
 	//vector<Vec4i> hierarchie;
 	vector<cv::Point>contour_externe;
@@ -26,24 +26,13 @@ public:
 	//***********
 	
 	int ordreHorizontal;
-	double densite;
-	//contour-feature
-	int nbr_contours;
-	double surface;
-	double perimeter;
-	vector<double> contour_aproximation_scores;
-	//geometrie features
-	Point2f centre_de_masse;
-	int crossings;
-	cv::Moments moments;
-	double dtw;
+	
 	//*******************************************************methodes()
 	
-=======
+
 	map<string, double> probabilites_classes;
 
->>>>>>> d88e3d92a58f3ca45177de8a08b871817f8f5b7f
-	int ordreHorizontal;
+
 	double debutX;
 	double finX;
 	double debutY;
@@ -56,7 +45,7 @@ public:
 	double ratio();
 	double densite();
 	double portionHauteur();
-<<<<<<< HEAD
+
 	void setData(cv::Mat src);
 	void setContourExterne();
 	double getNbrContours();
@@ -75,8 +64,5 @@ public:
 	double getCrossings();
 	double setDTW();//
 
-
-=======
->>>>>>> d88e3d92a58f3ca45177de8a08b871817f8f5b7f
 };
 
