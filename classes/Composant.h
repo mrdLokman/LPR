@@ -14,7 +14,6 @@ using namespace cv;
 class Composant
 {
 public:
-
 	Mat data;
 	map<string, double> attributs;
 	vector<vector<cv::Point>>contours;
@@ -23,9 +22,7 @@ public:
 	//***********
 	//features
 	//***********
-	double largeur;
-	double hauteur;
-	double ratio;
+	
 	int ordreHorizontal;
 	double densite;
 	//contour-feature
@@ -55,19 +52,21 @@ public:
 	double portionHauteur();
 	void setData(cv::Mat src);
 	void setContourExterne();
-	void setPositionX(int);
-	void setPositionY(int);
-	void setRatio();
-	void setOrdreHorizontal(int);
-	void setDensite();
-	void setNbrContours();
-	void setSurface();
-	void setPerimeter();
-	void setContourAproximationScores();
-	void setCentreDeMasse();
-	void setCrossings();
-	void setMoments();
-	void setDTW();//
+	double getNbrContours();
+	double getSurface();
+	double getPerimeter();
+	double getContourAproximationScores();
+	double getYeentreDeMasse();
+	double getM00();
+	double getM01();
+	double getM10();
+	double getM11();
+	double getM02();
+	double getM20();
+	double getM21();
+	double getM12();
+	double getCrossings();
+	double setDTW();//
 
 
 };
