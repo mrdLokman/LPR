@@ -34,6 +34,7 @@ double Composant::portionHauteur() {
 
 	return attributs["ph"];
 }
+<<<<<<< HEAD
 void Composant::setData(cv::Mat src)
 {
 	this->data = src;
@@ -110,3 +111,5 @@ double Composant::getM11()
 	}
 	return this->attributs["m11"];
 }
+=======
+>>>>>>> d88e3d92a58f3ca45177de8a08b871817f8f5b7f

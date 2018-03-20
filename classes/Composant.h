@@ -15,7 +15,9 @@ class Composant
 {
 public:
 	Mat data;
+
 	map<string, double> attributs;
+<<<<<<< HEAD
 	vector<vector<cv::Point>>contours;
 	//vector<Vec4i> hierarchie;
 	vector<cv::Point>contour_externe;
@@ -37,6 +39,10 @@ public:
 	double dtw;
 	//*******************************************************methodes()
 	
+=======
+	map<string, double> probabilites_classes;
+
+>>>>>>> d88e3d92a58f3ca45177de8a08b871817f8f5b7f
 	int ordreHorizontal;
 	double debutX;
 	double finX;
@@ -50,6 +56,7 @@ public:
 	double ratio();
 	double densite();
 	double portionHauteur();
+<<<<<<< HEAD
 	void setData(cv::Mat src);
 	void setContourExterne();
 	double getNbrContours();
@@ -69,5 +76,7 @@ public:
 	double setDTW();//
 
 
+=======
+>>>>>>> d88e3d92a58f3ca45177de8a08b871817f8f5b7f
 };
 
