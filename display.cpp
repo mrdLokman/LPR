@@ -1,5 +1,5 @@
 #include"display.h"
-
+//----------------------------
 cv::Mat display_images(std::vector<cv::Mat>& vecMat, int windowHeight, int nRows) {
 	int N = vecMat.size();
 	nRows = nRows > N ? N : nRows;

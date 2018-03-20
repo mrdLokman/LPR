@@ -19,7 +19,7 @@ public:
 
 	map<string, double> attributs;
 	map<string, double> probabilites_classes;
-
+	
 	int ordreHorizontal;
 	double debutX;
 	double finX;
@@ -33,7 +33,6 @@ public:
 	double ratio();
 	double densite();
 	double portionHauteur();
-
 
 };
 
