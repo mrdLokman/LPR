@@ -34,7 +34,7 @@ double Composant::portionHauteur() {
 
 	return attributs["ph"];
 }
-<<<<<<< HEAD
+
 void Composant::setData(cv::Mat src)
 {
 	this->data = src;
@@ -79,9 +79,12 @@ double Composant::getPerimeter()
 	return this->attributs["perimetre"];
 }
 
-double Composant::getYeentreDeMasse()
+double Composant::getYcentreDeMasse()
 {
-	this->centre_de_masse = Point2f(static_cast<float>(this->moments.m10 / this->moments.m00), static_cast<float>(this->moments.m01 / this->moments.m00));
+	if (attributs.find("yCentreDeMasse") == attributs.end()) {
+		this->attributs["yCentreDeMasse"] = this->contour_externe.empty() ? -1 : static_cast<float>(getM01() / getM00());
+	}
+	return this->attributs["yCentreDeMasse"];
 }
 double Composant::getM00()
 {
@@ -111,5 +114,4 @@ double Composant::getM11()
 	}
 	return this->attributs["m11"];
 }
-=======
->>>>>>> d88e3d92a58f3ca45177de8a08b871817f8f5b7f
+
