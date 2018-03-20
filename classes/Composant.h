@@ -18,6 +18,7 @@ public:
 	Mat data;
 
 	map<string, double> attributs;
+	map<string, double> probabilites_classes;
 
 	int ordreHorizontal;
 	double debutX;
