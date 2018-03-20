@@ -115,3 +115,35 @@ double Composant::getM11()
 	return this->attributs["m11"];
 }
 
+double Composant::getM02()
+{
+	if (attributs.find("m02") == attributs.end()) {
+		this->attributs["m02"] = this->contour_externe.empty() ? -1 : cv::moments(this->contour_externe, true).m02;
+	}
+	return this->attributs["m02"];
+}
+
+double Composant::getM20()
+{
+	if (attributs.find("m20") == attributs.end()) {
+		this->attributs["m20"] = this->contour_externe.empty() ? -1 : cv::moments(this->contour_externe, true).m20;
+	}
+	return this->attributs["m20"];
+}
+
+double Composant::getM21()
+{
+	if (attributs.find("m21") == attributs.end()) {
+		this->attributs["m21"] = this->contour_externe.empty() ? -1 : cv::moments(this->contour_externe, true).m21;
+	}
+	return this->attributs["m21"];
+}
+
+double Composant::getM12()
+{
+	if (attributs.find("m12") == attributs.end()) {
+		this->attributs["m12"] = this->contour_externe.empty() ? -1 : cv::moments(this->contour_externe, true).m12;
+	}
+	return this->attributs["m12"];
+}
+
