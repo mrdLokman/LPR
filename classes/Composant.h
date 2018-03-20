@@ -18,17 +18,9 @@ public:
 
 	map<string, double> attributs;
 	map<string, double> probabilites_classes;
-
 	vector<vector<cv::Point>>contours;
 	//vector<Vec4i> hierarchie;
 	vector<cv::Point>contour_externe;
-	//***********
-	//features
-	//***********
-	
-	int ordreHorizontal;
-	
-	
 	int ordreHorizontal;
 	double debutX;
 	double finX;
@@ -56,8 +48,6 @@ public:
 	double getM21();
 	double getM12();
 	double getCrossings();
-	double setDTW();//
-
-
+	double setDTW();
 };
 
