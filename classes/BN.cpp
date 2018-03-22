@@ -41,7 +41,9 @@ string CBN::prediction(map<string, int> instance){
 
 	for (auto classe : label_classes) {
 		proba_aposteriorie[classe] = proba_aposteriorie[classe] / somme;
+		cout << classe << " : " << proba_aposteriorie[classe] << endl;
 	}
+	cout << endl;
 
 	// prediction max des probas
 	for (auto classe : label_classes) {

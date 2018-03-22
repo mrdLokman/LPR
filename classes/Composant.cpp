@@ -20,8 +20,8 @@ double Composant::ratio(){
 double Composant::densite(){
 
 	if (attributs.find("densite") == attributs.end()) {
-		int nbrPixelBlanc = countNonZero(data);
-		attributs["densite"] = 1.0 - ((double)nbrPixelBlanc) / ((double)((finX - debutX)*(finY - debutY)));
+		int nbrPixelNoir = data.rows * data.cols - countNonZero(data);
+		attributs["densite"] = ((double)nbrPixelNoir) / ((double)((finX - debutX)*(finY - debutY)));
 	}
 
 	return attributs["densite"];

@@ -1,75 +1,12 @@
 #include"Segmentation.h"
 
+Mat elargir(Mat src) {
 
-vector<Composant> segmentationProjection(Mat plaque) {
-	int w = plaque.cols;
-	int h = plaque.rows;
+	Rect r(1, 1, src.cols, src.rows);
+	Mat dest(Size(src.cols + 2, src.rows + 2), CV_8U, Scalar(255));
+	src.copyTo(dest(r));
 
-	vector<int> projVerticale(w, 0);
-	vector<Composant> composants;
-
-	for (int i = 0; i < w; i++){
-		Mat data = plaque.col(i);
-		projVerticale.at(i) = h - countNonZero(data);
-	}
-
-	int j = 0;
-	while (j < w) {
-		while (j < w && projVerticale.at(j) == 0) j++;
-
-		int startX = 0, finX = w - 1;
-
-		if (j != w) {
-			startX = j;
-			while (j < w && projVerticale.at(j) > 0) j++;
-			finX = j - 1;
-
-			int startY = 0, finY = h - 1;
-
-			int y = 0;
-			while (y < h) {
-				int i = 0;
-				for (i = startX; i <= finX; i++)
-					if (plaque.at<unsigned char>(y, i) == 0) break;
-
-				if (i <= finX) {
-					startY = y;
-					break;
-				}
-				y++;
-			}
-
-			y = h - 1;
-			while (y >= 0) {
-				int i = 0;
-				for (i = startX; i <= finX; i++)
-					if (plaque.at<unsigned char>(y, i) == 0) break;
-
-				if (i <= finX) {
-					finY = y;
-					break;
-				}
-				y--;
-			}
-
-			Composant c;
-			c.ordreHorizontal = composants.size() + 1;
-			c.debutX = startX;
-			c.finX = finX;
-			c.debutY = startY;
-			c.finY = finY;
-
-			Mat m(plaque, Rect(startX, 0, finX - startX + 1, h));
-			m.copyTo(c.data);
-
-			composants.push_back(c);
-		}
-
-
-		j++;
-	}
-
-	return composants;
+	return dest;
 }
 
 Composant crop(Mat src) {
@@ -133,10 +70,83 @@ Composant crop(Mat src) {
 	c.finY = finY;
 
 	Mat m(src, Rect(startX, 0, finX - startX + 1, h));
+	m = elargir(m);
 	m.copyTo(c.data);
 
 
 	return c;
+}
+
+vector<Composant> segmentationProjection(Mat plaque) {
+	int w = plaque.cols;
+	int h = plaque.rows;
+
+	vector<int> projVerticale(w, 0);
+	vector<Composant> composants;
+
+	for (int i = 0; i < w; i++){
+		Mat data = plaque.col(i);
+		projVerticale.at(i) = h - countNonZero(data);
+	}
+
+	int j = 0;
+	while (j < w) {
+		while (j < w && projVerticale.at(j) == 0) j++;
+
+		int startX = 0, finX = w - 1;
+
+		if (j != w) {
+			startX = j;
+			while (j < w && projVerticale.at(j) > 0) j++;
+			finX = j - 1;
+
+			int startY = 0, finY = h - 1;
+
+			int y = 0;
+			while (y < h) {
+				int i = 0;
+				for (i = startX; i <= finX; i++)
+					if (plaque.at<unsigned char>(y, i) == 0) break;
+
+				if (i <= finX) {
+					startY = y;
+					break;
+				}
+				y++;
+			}
+
+			y = h - 1;
+			while (y >= 0) {
+				int i = 0;
+				for (i = startX; i <= finX; i++)
+					if (plaque.at<unsigned char>(y, i) == 0) break;
+
+				if (i <= finX) {
+					finY = y;
+					break;
+				}
+				y--;
+			}
+
+			Composant c;
+			c.ordreHorizontal = composants.size() + 1;
+			c.debutX = startX;
+			c.finX = finX;
+			c.debutY = startY;
+			c.finY = finY;
+
+			Mat m(plaque, Rect(startX, 0, finX - startX + 1, h));
+			m = elargir(m);
+			m.copyTo(c.data);
+
+			composants.push_back(c);
+		}
+
+
+		j++;
+	}
+
+	return composants;
 }
 
 vector<Composant> segmentationACC(Mat plaque) {
@@ -168,3 +178,5 @@ vector<Composant> segmentationACC(Mat plaque) {
 
 	return composants;
 }
+
+
