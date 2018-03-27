@@ -10,7 +10,8 @@
 
 using namespace std;
 using namespace cv;
-
+// la plaque est partitionnée en une suite de composants
+// 
 class Composant
 {
 public:

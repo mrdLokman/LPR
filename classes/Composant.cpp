@@ -45,7 +45,10 @@ void Composant::setContourExterne()
 	if (data.empty())return;
 	vector<vector<Point>> contours;
 	vector<Vec4i> hierarchy;
-	findContours(this->data, contours, hierarchy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE, Point(0, 0));
+	Mat m;
+	this->data.copyTo(m);
+	threshold(m, m, 100, 255, CV_THRESH_BINARY_INV);
+	findContours(m, contours, hierarchy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE, Point(0, 0));
 	this->contour_externe = contours[0];
 }
 
@@ -56,7 +59,10 @@ double Composant::getNbrContours()
 	if (attributs.find("nbrContours") == attributs.end()) {
 		vector<vector<Point>> contours;
 		vector<Vec4i> hierarchy;
-		findContours(this->data, contours, hierarchy, CV_RETR_CCOMP, CHAIN_APPROX_SIMPLE, Point(0, 0));
+		Mat m;
+		this->data.copyTo(m);
+		threshold(m, m, 100, 255, CV_THRESH_BINARY_INV);
+		findContours(m, contours, hierarchy, CV_RETR_CCOMP, CHAIN_APPROX_SIMPLE, Point(0, 0));
 		attributs["nbrCnotours"] = contours.size();
 		
 	}
