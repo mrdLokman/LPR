@@ -20,4 +20,6 @@ void organiserDataSetCaracteres(string dataSetSource, string destinationFolder);
 
 void genererValeursAttribut(string carsFolder, string outFile, string Attribut, bool type);
 
+int genererDataXml(string dataSetD, string dataSetL, string dataFile, string labelsFile);
+
 #endif

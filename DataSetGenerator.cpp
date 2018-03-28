@@ -29,8 +29,8 @@ void genererDataSetAttributs(string carsFolder,string labelsFile, string dataFil
 
 	ofstream donnees(dataFile);
 	ofstream etiq(labelsFile);
-	donnees << "ratio densite ph m00 m10 m01 m11 m02 m20 m12 m21 nbrContours surface perimetre yCentreDeMasse" << endl;
-	etiq << "classe" << endl;
+	//donnees << "ratio densite ph m00 m10 m01 m11 m02 m20 m12 m21 nbrContours surface perimetre yCentreDeMasse" << endl;
+	//etiq << "classe" << endl;
 
 	cv::String path(carsFolder);
 	vector<cv::String> fn;
@@ -67,7 +67,7 @@ void genererDataSetAttributs(string carsFolder,string labelsFile, string dataFil
 
 			map<string, double> data;
 			composants.at(i).setContourExterne();
-			/*
+
 			data["ratio"] = composants.at(i).ratio();
 			data["densite"] = composants.at(i).densite();
 			data["ph"] = composants.at(i).portionHauteur();
@@ -79,7 +79,6 @@ void genererDataSetAttributs(string carsFolder,string labelsFile, string dataFil
 			data["m20"] = composants.at(i).getM20();
 			data["m12"] = composants.at(i).getM12();
 			data["m21"] = composants.at(i).getM21();
-			*/
 			data["nbrContours"] = composants.at(i).getNbrContours();
 			data["surface"] = composants.at(i).getSurface();
 			data["perimetre"] = composants.at(i).getPerimeter();
@@ -388,4 +387,50 @@ void genererValeursAttribut(string carsFolder, string outFile, string Attribut, 
 		}
 		waitKey(0);
 	}
+}
+
+int genererDataXml(string dataSetD, string dataSetL, string dataFile, string labelsFile) {
+	ifstream in_state_data(dataSetD.c_str(), ifstream::in);
+	ifstream in_state_labels(dataSetL.c_str(), ifstream::in);
+
+	Mat labels;
+	Mat data;
+
+	string dataComposant;
+	string labelComposant;
+	while (getline(in_state_data, dataComposant) && getline(in_state_labels, labelComposant)) {
+		istringstream in_data(dataComposant);
+		double value;
+		Mat dataC;
+		while (in_data >> value) {
+			dataC.push_back(value);
+		}
+		Mat dataCFloat;
+		dataC.convertTo(dataCFloat, CV_32FC1);
+		Mat dataCFlattenedFloat = dataCFloat.reshape(1, 1);
+
+		data.push_back(dataCFlattenedFloat);
+		
+		labels.push_back(stoi(labelComposant));
+
+	}
+
+	FileStorage fsClassifications(labelsFile, FileStorage::WRITE);
+	if (fsClassifications.isOpened() == false) {
+		std::cout << "error, unable to open training classifications file, exiting program\n\n";
+		return -1;
+	}
+	fsClassifications << "labels" << labels;
+	fsClassifications.release();
+
+	cv::FileStorage fsTrainingImages(dataFile, FileStorage::WRITE);
+
+	if (fsTrainingImages.isOpened() == false) {
+		std::cout << "error, unable to open training images file, exiting program\n\n";
+		return -1;
+	}
+	fsTrainingImages << "data" << data;
+	fsTrainingImages.release();
+
+	return 0;
 }
