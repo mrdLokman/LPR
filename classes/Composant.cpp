@@ -9,31 +9,6 @@ Composant::~Composant() {
 
 }
 
-double Composant::ratio(){
-	
-	if (attributs.find("ratio") == attributs.end())
-		attributs["ratio"] = (finX - debutX) / (finY - debutY);
-	
-	return attributs["ratio"];
-}
-
-double Composant::densite(){
-
-	if (attributs.find("densite") == attributs.end()) {
-		int nbrPixelNoir = data.rows * data.cols - countNonZero(data);
-		attributs["densite"] = ((double)nbrPixelNoir) / ((double)((finX - debutX)*(finY - debutY)));
-	}
-
-	return attributs["densite"];
-}
-
-double Composant::portionHauteur() {
-	if (attributs.find("ph") == attributs.end()) {
-		attributs["ph"] = ((double)(finY - debutY)) / ((double)data.rows);
-	}
-
-	return attributs["ph"];
-}
 
 void Composant::setData(cv::Mat src)
 {
@@ -52,7 +27,83 @@ void Composant::setContourExterne()
 	this->contour_externe = contours[0];
 }
 
+double Composant::getHauteur()
+{
+	return (double)(finY - debutY);
+}
 
+bool Composant::estDecide() {
+	return this->decision;
+}
+
+double Composant::getAttribut(string attributName, double parametre){
+	if (attributName == "ratio")
+		return this->getRatio();
+	if (attributName == "densite")
+		return this->getDensite();
+	if (attributName == "ph")
+		return this->getPortionHauteur();
+	if (attributName == "hr")
+		return this->getHauteurRelative(parametre);
+	if (attributName == "nbrContours")
+		return this->getNbrContours();
+	if (attributName == "surface")
+		return this->getSurface();
+	if (attributName == "perimetre")
+		return this->getPerimeter();
+	if (attributName == "yCentreDeMasse")
+		return this->getYcentreDeMasse();
+	if (attributName == "m00")
+		return this->getM00();
+	if (attributName == "m01")
+		return this->getM01();
+	if (attributName == "m10")
+		return this->getM10();
+	if (attributName == "m11")
+		return this->getM11();
+	if (attributName == "m02")
+		return this->getM02();
+	if (attributName == "m20")
+		return this->getM20();
+	if (attributName == "m12")
+		return this->getM12();
+	if (attributName == "m21")
+		return this->getM21();
+	if (attributName == "CAS")
+		return this->getContourAproximationScores();
+	if (attributName == "cross")
+		return this->getCrossings();
+	if (attributName == "dtw")
+		return this->setDTW();
+}
+
+//Calcule des attributs
+
+double Composant::getRatio() {
+
+	if (attributs.find("ratio") == attributs.end())
+		attributs["ratio"] = (finX - debutX) / (finY - debutY);
+
+	return attributs["ratio"];
+}
+
+double Composant::getDensite() {
+
+	if (attributs.find("densite") == attributs.end()) {
+		int nbrPixelNoir = data.rows * data.cols - countNonZero(data);
+		attributs["densite"] = ((double)nbrPixelNoir) / ((double)((finX - debutX)*(finY - debutY)));
+	}
+
+	return attributs["densite"];
+}
+
+double Composant::getPortionHauteur() {
+	if (attributs.find("ph") == attributs.end()) {
+		attributs["ph"] = ((double)(finY - debutY)) / ((double)data.rows);
+	}
+
+	return attributs["ph"];
+}
 
 double Composant::getNbrContours()
 {
@@ -85,11 +136,6 @@ double Composant::getPerimeter()
 	return this->attributs["perimetre"];
 }
 
-double Composant::getContourAproximationScores()
-{
-	return 0.0;
-}
-
 double Composant::getYcentreDeMasse()
 {
 	if (attributs.find("yCentreDeMasse") == attributs.end()) {
@@ -97,6 +143,7 @@ double Composant::getYcentreDeMasse()
 	}
 	return this->attributs["yCentreDeMasse"];
 }
+
 double Composant::getM00()
 {
 	if (attributs.find("m00") == attributs.end()) {
@@ -125,7 +172,6 @@ double Composant::getM11()
 	}
 	return this->attributs["m11"];
 }
-
 double Composant::getM02()
 {
 	if (attributs.find("m02") == attributs.end()) {
@@ -133,7 +179,6 @@ double Composant::getM02()
 	}
 	return this->attributs["m02"];
 }
-
 double Composant::getM20()
 {
 	if (attributs.find("m20") == attributs.end()) {
@@ -141,7 +186,6 @@ double Composant::getM20()
 	}
 	return this->attributs["m20"];
 }
-
 double Composant::getM21()
 {
 	if (attributs.find("m21") == attributs.end()) {
@@ -149,13 +193,28 @@ double Composant::getM21()
 	}
 	return this->attributs["m21"];
 }
-
 double Composant::getM12()
 {
 	if (attributs.find("m12") == attributs.end()) {
 		this->attributs["m12"] = this->contour_externe.empty() ? -1 : cv::moments(this->contour_externe, true).m12;
 	}
 	return this->attributs["m12"];
+}
+
+double Composant::getHauteurRelative(double hChar)
+{
+	if (attributs.find("hr") == attributs.end()) {
+		attributs["hr"] = ((double)(finY - debutY)) / hChar;
+	}
+
+	return attributs["hr"];
+}
+
+
+// To Do
+double Composant::getContourAproximationScores()
+{
+	return 0.0;
 }
 
 double Composant::getCrossings()
@@ -167,4 +226,3 @@ double Composant::setDTW()
 {
 	return 0.0;
 }
-

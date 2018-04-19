@@ -7,6 +7,7 @@
 #include <math.h>
 #include <vector>
 #include <map>
+#include "Composant.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ public:
 	void apprentissage(vector<vector<double> > data, vector<string>  labels);
 
 	string prediction(map<string, int> instance);
+	void classifier(map<string, int> instance, Composant& c, double seuil);
 
 	void chargerReseau(string file_name);
 

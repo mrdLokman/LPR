@@ -19,6 +19,7 @@ public:
 
 	map<string, double> attributs;
 	map<string, double> probabilites_classes;
+	bool decision = false;
 	vector<vector<cv::Point>>contours;
 	//vector<Vec4i> hierarchie;
 	vector<cv::Point>contour_externe;
@@ -32,13 +33,19 @@ public:
 	~Composant();
     void setData(cv::Mat src);
 	void setContourExterne();
-	double ratio();
-	double densite();
-	double portionHauteur();
+
+	double getHauteur();
+
+	bool estDecide();
+
+	double getAttribut(string attributName, double parametre = 0.0);
+
+	double getRatio();
+	double getDensite();
+	double getPortionHauteur();
 	double getNbrContours();
 	double getSurface();
 	double getPerimeter();
-	double getContourAproximationScores();
 	double getYcentreDeMasse();
 	double getM00();
 	double getM01();
@@ -48,6 +55,11 @@ public:
 	double getM20();
 	double getM21();
 	double getM12();
+
+	double getHauteurRelative(double hChar);
+
+	// To Do
+	double getContourAproximationScores();
 	double getCrossings();
 	double setDTW();
 };
