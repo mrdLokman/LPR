@@ -3,10 +3,10 @@
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
-
 #include <map>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 using namespace cv;
@@ -38,7 +38,7 @@ public:
 	double getSurface();
 	double getPerimeter();
 	double getContourAproximationScores();
-	double getYeentreDeMasse();
+	double getYcentreDeMasse();
 	double getM00();
 	double getM01();
 	double getM10();
@@ -47,6 +47,7 @@ public:
 	double getM20();
 	double getM21();
 	double getM12();
+	vector<double> getAll();
 	double getCrossings();
 	double setDTW();
 };

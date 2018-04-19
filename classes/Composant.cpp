@@ -1,32 +1,45 @@
 #include"Composant.h"
-
-
 Composant::Composant() {
 
 }
-
 Composant::~Composant() {
 
 }
 
-double Composant::ratio(){
-	
-	if (attributs.find("ratio") == attributs.end())
-		attributs["ratio"] = (finX - debutX) / (finY - debutY);
-	
-	return attributs["ratio"];
+void Composant::setData(cv::Mat src)
+{
+	this->data = src;
+}
+void Composant::setContourExterne()
+{
+	if (data.empty())return;
+	vector<vector<Point>> contours;
+	vector<Vec4i> hierarchy;
+	Mat m;
+	this->data.copyTo(m);
+	try {
+		findContours(m, contours, hierarchy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE, Point(0, 0));
+		this->contour_externe = contours[0];
+	}
+	catch (Exception e) {}
 }
 
-double Composant::densite(){
+double Composant::ratio() {
 
+	if (attributs.find("ratio") == attributs.end())
+		attributs["ratio"] = double(this->data.cols)/ (double)(this->data.rows);
+
+	return attributs["ratio"];
+}
+double Composant::densite() {
+	if (data.empty())return-1;
 	if (attributs.find("densite") == attributs.end()) {
 		int nbrPixelBlanc = countNonZero(data);
-		attributs["densite"] = 1.0 - ((double)nbrPixelBlanc) / ((double)((finX - debutX)*(finY - debutY)));
+		attributs["densite"] =  1.0 - ((double)nbrPixelBlanc) / ((double)((this->data.rows)*(this->data.cols)));
 	}
 
 	return attributs["densite"];
 }
-
 double Composant::portionHauteur() {
 	if (attributs.find("ph") == attributs.end()) {
 		attributs["ph"] = ((double)(finY - debutY)) / ((double)data.rows);
@@ -34,35 +47,19 @@ double Composant::portionHauteur() {
 
 	return attributs["ph"];
 }
-
-void Composant::setData(cv::Mat src)
-{
-	this->data = src;
-}
-
-void Composant::setContourExterne()
-{
-	if (data.empty())return;
-	vector<vector<Point>> contours;
-	vector<Vec4i> hierarchy;
-	findContours(this->data, contours, hierarchy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE, Point(0, 0));
-	this->contour_externe = contours[0];
-}
-
-
-
 double Composant::getNbrContours()
 {
 	if (attributs.find("nbrContours") == attributs.end()) {
 		vector<vector<Point>> contours;
 		vector<Vec4i> hierarchy;
-		findContours(this->data, contours, hierarchy, CV_RETR_CCOMP, CHAIN_APPROX_SIMPLE, Point(0, 0));
+		Mat m;
+		this->data.copyTo(m);
+		findContours(m, contours, hierarchy, CV_RETR_CCOMP, CHAIN_APPROX_SIMPLE, Point(0, 0));
 		attributs["nbrCnotours"] = contours.size();
 		
 	}
 		return attributs["nbrCnotours"];
 }
-
 double Composant::getSurface()
 {
 	if (attributs.find("surface") == attributs.end()) {
@@ -70,7 +67,6 @@ double Composant::getSurface()
 	}
 	return this->attributs["surface"];
 }
-
 double Composant::getPerimeter()
 {
 	if (attributs.find("perimetre") == attributs.end()) {
@@ -78,7 +74,6 @@ double Composant::getPerimeter()
 	}
 	return this->attributs["perimetre"];
 }
-
 double Composant::getYcentreDeMasse()
 {
 	if (attributs.find("yCentreDeMasse") == attributs.end()) {
@@ -114,7 +109,6 @@ double Composant::getM11()
 	}
 	return this->attributs["m11"];
 }
-
 double Composant::getM02()
 {
 	if (attributs.find("m02") == attributs.end()) {
@@ -122,7 +116,6 @@ double Composant::getM02()
 	}
 	return this->attributs["m02"];
 }
-
 double Composant::getM20()
 {
 	if (attributs.find("m20") == attributs.end()) {
@@ -130,7 +123,6 @@ double Composant::getM20()
 	}
 	return this->attributs["m20"];
 }
-
 double Composant::getM21()
 {
 	if (attributs.find("m21") == attributs.end()) {
@@ -138,7 +130,6 @@ double Composant::getM21()
 	}
 	return this->attributs["m21"];
 }
-
 double Composant::getM12()
 {
 	if (attributs.find("m12") == attributs.end()) {
@@ -146,4 +137,21 @@ double Composant::getM12()
 	}
 	return this->attributs["m12"];
 }
-
+vector<double> Composant::getAll() {
+	vector<double> d;
+	d.push_back(this->densite());
+	//d.push_back(this->getNbrContours());
+	d.push_back(this->ratio());
+	/*d.push_back(this->getPerimeter());
+	d.push_back(this->getSurface());
+	d.push_back(this->getYcentreDeMasse());
+	d.push_back(this->getM01());
+	d.push_back(this->getM10());
+	d.push_back(this->getM11());
+	d.push_back(this->getM02());
+	d.push_back(this->getM12());
+	d.push_back(this->getM20());
+	d.push_back(this->getM21());*/
+	
+	return d;
+}
