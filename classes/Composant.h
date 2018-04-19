@@ -10,7 +10,8 @@
 
 using namespace std;
 using namespace cv;
-
+// la plaque est partitionnée en une suite de composants
+// 
 class Composant
 {
 public:
@@ -26,7 +27,7 @@ public:
 	double finX;
 	double debutY;
 	double finY;
-//*******************************************************methodes()
+
 	Composant();
 	~Composant();
     void setData(cv::Mat src);

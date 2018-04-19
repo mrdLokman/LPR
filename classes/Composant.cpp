@@ -34,8 +34,10 @@ double Composant::ratio() {
 double Composant::densite() {
 	if (data.empty())return-1;
 	if (attributs.find("densite") == attributs.end()) {
-		int nbrPixelBlanc = countNonZero(data);
-		attributs["densite"] =  1.0 - ((double)nbrPixelBlanc) / ((double)((this->data.rows)*(this->data.cols)));
+
+		int nbrPixelNoir = data.rows * data.cols - countNonZero(data);
+		attributs["densite"] = ((double)nbrPixelNoir) / ((double)((finX - debutX)*(finY - debutY)));
+
 	}
 
 	return attributs["densite"];
@@ -47,6 +49,27 @@ double Composant::portionHauteur() {
 
 	return attributs["ph"];
 }
+
+void Composant::setData(cv::Mat src)
+{
+	this->data = src;
+}
+
+void Composant::setContourExterne()
+{
+	if (data.empty())return;
+	vector<vector<Point>> contours;
+	vector<Vec4i> hierarchy;
+	Mat m;
+	this->data.copyTo(m);
+	threshold(m, m, 100, 255, CV_THRESH_BINARY_INV);
+	findContours(m, contours, hierarchy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE, Point(0, 0));
+	this->contour_externe = contours[0];
+}
+
+
+
+
 double Composant::getNbrContours()
 {
 	if (attributs.find("nbrContours") == attributs.end()) {
@@ -54,6 +77,7 @@ double Composant::getNbrContours()
 		vector<Vec4i> hierarchy;
 		Mat m;
 		this->data.copyTo(m);
+		threshold(m, m, 100, 255, CV_THRESH_BINARY_INV);
 		findContours(m, contours, hierarchy, CV_RETR_CCOMP, CHAIN_APPROX_SIMPLE, Point(0, 0));
 		attributs["nbrCnotours"] = contours.size();
 		
@@ -74,6 +98,14 @@ double Composant::getPerimeter()
 	}
 	return this->attributs["perimetre"];
 }
+
+
+double Composant::getContourAproximationScores()
+{
+	return 0.0;
+}
+
+
 double Composant::getYcentreDeMasse()
 {
 	if (attributs.find("yCentreDeMasse") == attributs.end()) {
@@ -137,6 +169,7 @@ double Composant::getM12()
 	}
 	return this->attributs["m12"];
 }
+
 vector<double> Composant::getAll() {
 	vector<double> d;
 	d.push_back(this->densite());
@@ -155,3 +188,16 @@ vector<double> Composant::getAll() {
 	
 	return d;
 }
+
+
+double Composant::getCrossings()
+{
+	return 0.0;
+}
+
+double Composant::setDTW()
+{
+	return 0.0;
+}
+
+
