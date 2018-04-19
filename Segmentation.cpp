@@ -173,10 +173,92 @@ vector<Composant> segmentationACC(Mat plaque) {
 
 	for (int i = 0; i < nLabels - 1; i++){
 		Composant c = crop(comps.at(i));
+		c.setContourExterne();
 		composants.push_back(c);
 	}
 
 	return composants;
 }
 
+bool testFinSegmentation(){
 
+	return true;
+}
+
+int AutomateSegmentation(Mat plaque) {
+	CBN cbn;
+	cbn.chargerReseau("data/dataR.txt");
+
+	double seuil = 0.85;
+
+	vector<Composant> composants = segmentationACC(plaque);
+	//vector<Composant> composants = segmentationProjection(plaque);
+
+	bool finSegmentation = false;
+
+	while(!finSegmentation){
+		map<string, double> data;
+
+		for (int i = 0; i < composants.size(); i++) {
+
+			data["ratio"] = composants.at(i).getRatio();
+			data["densite"] = composants.at(i).getDensite();
+			data["ph"] = composants.at(i).getPortionHauteur();
+			data["nbrContours"] = composants.at(i).getNbrContours();
+
+			//AfficheMap(data);
+
+			map<string, int> instance = cbn.interval(data);
+			cbn.classifier(instance, composants.at(i), seuil);
+			AfficheMap(composants.at(i).probabilites_classes);
+			imshow("img", composants.at(i).data);
+
+			waitKey(0);
+			destroyWindow("img");
+
+		}
+
+		system("pause");
+
+		int n = 0;
+		double s = 0;
+		for (int i = 0; i < composants.size(); i++) {
+			if (composants.at(i).estDecide() && composants.at(i).probabilites_classes["caractere"] > seuil) {
+				s += composants.at(i).getHauteur();
+				n++;
+			}
+		}
+
+		cout << "nbr decides caractere " << n << endl << endl;
+
+		if (n != 0) {
+			s = s / n;
+
+			for (int i = 0; i < composants.size(); i++) {
+				if (!composants.at(i).estDecide()) {
+
+					data["ratio"] = composants.at(i).getRatio();
+					data["densite"] = composants.at(i).getDensite();
+					data["ph"] = composants.at(i).getPortionHauteur();
+					data["nbrContours"] = composants.at(i).getNbrContours();
+					data["hr"] = composants.at(i).getHauteurRelative(s);
+
+					//AfficheMap(data);
+
+					map<string, int> instance = cbn.interval(data);
+					cbn.classifier(instance, composants.at(i), seuil);
+					AfficheMap(composants.at(i).probabilites_classes);
+					imshow("img", composants.at(i).data);
+
+					waitKey(0);
+					destroyWindow("img");
+				}
+			}
+		}
+
+
+		finSegmentation = testFinSegmentation();
+	}
+
+	return 0;
+}

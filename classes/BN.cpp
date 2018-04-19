@@ -57,6 +57,42 @@ string CBN::prediction(map<string, int> instance){
 	return resultat;
 }
 
+void CBN::classifier(map<string, int> instance, Composant& c, double seuil){
+
+	map <string, double> proba_aposteriorie;
+	map <string, double> proba_instanceSachantClasse;
+
+	double max = 0;
+	double somme = 0;
+	string resultat;
+
+	//factorisation = calcule de probabilite d'un vecteur sachant les classes P(A|C)
+	for (auto classe : label_classes) {
+		proba_instanceSachantClasse[classe] = 1.0;
+		for (map<string, int>::iterator it = instance.begin(); it != instance.end(); ++it) {
+			string attribut = it->first;
+			int val = it->second;
+			proba_instanceSachantClasse[classe] = proba_instanceSachantClasse[classe] * proba_conditionnelles[attribut][classe].at(val);
+		}
+	}
+
+	//proba apriorie
+	
+	somme = 0;
+	for (auto classe : label_classes) {
+		proba_aposteriorie[classe] = proba_apriorie[classe] * proba_instanceSachantClasse[classe];
+		somme += proba_aposteriorie[classe];
+	}
+
+	for (auto classe : label_classes) {
+		proba_aposteriorie[classe] = proba_aposteriorie[classe] / somme;
+		c.probabilites_classes[classe] = proba_aposteriorie[classe];
+		if (proba_aposteriorie[classe] > seuil)
+			c.decision = true;
+	}
+}
+
+
 void CBN::chargerReseau(string file_name){
 	ifstream in_state_(file_name.c_str(), ifstream::in);
 	string commentaire;
@@ -86,16 +122,17 @@ void CBN::chargerReseau(string file_name){
 		//cout << "classe : " << classe << ", proba : " << v << endl;
 		i++;
 	}
-	getline(in_state_, commentaire);
+	getline(in_state_, commentaire);  // debut distributions des probas conditionnelles
 
 	while (getline(in_state_, value)) {
+		getline(in_state_, commentaire);  // nom attribut
 		getline(in_state_, value);
 		//nom de l'attribut
 		string nomAttr = value;
 		label_attributs.push_back(nomAttr);
 		//cout << "attribut : " << nomAttr << endl;
 
-		//intervals de l'attribut
+		getline(in_state_, commentaire); //intervals de l'attribut 
 		getline(in_state_, liste);
 		istringstream sa(liste);
 		vector<double> interval;
@@ -104,7 +141,7 @@ void CBN::chargerReseau(string file_name){
 		}
 		intervals_attributs[nomAttr] = interval;
 		
-		//probas contitionnelles
+		getline(in_state_, commentaire); //probas contitionnelles 
 		map < string, vector<double>> probaAttrSachantClasse;
 		for (int l = 0; l < nbr_classes; l++) {
 			getline(in_state_, liste);
