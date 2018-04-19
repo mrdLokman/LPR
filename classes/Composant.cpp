@@ -1,10 +1,8 @@
 #include"Composant.h"
 
-
 Composant::Composant() {
 
 }
-
 Composant::~Composant() {
 
 }
@@ -32,11 +30,13 @@ double Composant::getHauteur()
 	return (double)(finY - debutY);
 }
 
-bool Composant::estDecide() {
+bool Composant::estDecide() 
+{
 	return this->decision;
 }
 
-double Composant::getAttribut(string attributName, double parametre){
+double Composant::getAttribut(string attributName, double parametre)
+{
 	if (attributName == "ratio")
 		return this->getRatio();
 	if (attributName == "densite")
@@ -77,6 +77,27 @@ double Composant::getAttribut(string attributName, double parametre){
 		return this->setDTW();
 }
 
+vector<double> Composant::getAll()
+ {
+	vector<double> d;
+	d.push_back(this->densite());
+	//d.push_back(this->getNbrContours());
+	d.push_back(this->ratio());
+	/*d.push_back(this->getPerimeter());
+	d.push_back(this->getSurface());
+	d.push_back(this->getYcentreDeMasse());
+	d.push_back(this->getM01());
+	d.push_back(this->getM10());
+	d.push_back(this->getM11());
+	d.push_back(this->getM02());
+	d.push_back(this->getM12());
+	d.push_back(this->getM20());
+	d.push_back(this->getM21());*/
+	
+	return d;
+}
+
+
 //Calcule des attributs
 
 double Composant::getRatio() {
@@ -87,23 +108,29 @@ double Composant::getRatio() {
 	return attributs["ratio"];
 }
 
-double Composant::getDensite() {
 
+double Composant::getDensite() {
+	
 	if (attributs.find("densite") == attributs.end()) {
+
 		int nbrPixelNoir = data.rows * data.cols - countNonZero(data);
 		attributs["densite"] = ((double)nbrPixelNoir) / ((double)((finX - debutX)*(finY - debutY)));
+
 	}
 
 	return attributs["densite"];
 }
 
+
 double Composant::getPortionHauteur() {
+	
 	if (attributs.find("ph") == attributs.end()) {
 		attributs["ph"] = ((double)(finY - debutY)) / ((double)data.rows);
 	}
 
 	return attributs["ph"];
 }
+
 
 double Composant::getNbrContours()
 {
@@ -211,7 +238,7 @@ double Composant::getHauteurRelative(double hChar)
 }
 
 
-// To Do
+
 double Composant::getContourAproximationScores()
 {
 	return 0.0;

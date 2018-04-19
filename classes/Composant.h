@@ -1,17 +1,17 @@
-#pragma once
+#ifndef COMPOSANT_H
+#define COMPOSANT_H
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
-
 #include <map>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 using namespace cv;
-// la plaque est partitionnée en une suite de composants
-// 
+
 class Composant
 {
 public:
@@ -39,6 +39,7 @@ public:
 	bool estDecide();
 
 	double getAttribut(string attributName, double parametre = 0.0);
+	vector<double> getAll();
 
 	double getRatio();
 	double getDensite();
@@ -55,7 +56,6 @@ public:
 	double getM20();
 	double getM21();
 	double getM12();
-
 	double getHauteurRelative(double hChar);
 
 	// To Do
@@ -64,3 +64,4 @@ public:
 	double setDTW();
 };
 
+#endif
