@@ -80,9 +80,9 @@ double Composant::getAttribut(string attributName, double parametre)
 vector<double> Composant::getAll()
  {
 	vector<double> d;
-	d.push_back(this->densite());
+	d.push_back(this->getDensite());
 	//d.push_back(this->getNbrContours());
-	d.push_back(this->ratio());
+	d.push_back(this->getRatio());
 	/*d.push_back(this->getPerimeter());
 	d.push_back(this->getSurface());
 	d.push_back(this->getYcentreDeMasse());
