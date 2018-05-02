@@ -33,14 +33,14 @@ public:
 	~Composant();
     void setData(cv::Mat src);
 	void setContourExterne();
-
+	vector<double> huMoments;
 	double getHauteur();
 
 	bool estDecide();
 
 	double getAttribut(string attributName, double parametre = 0.0);
 	vector<double> getAll();
-
+	void calcHuMoments();
 	double getRatio();
 	double getDensite();
 	double getPortionHauteur();
@@ -56,6 +56,14 @@ public:
 	double getM20();
 	double getM21();
 	double getM12();
+	//moments de hu 
+	double getHu1();
+	double getHu2();
+	double getHu3();
+	double getHu4();
+	double getHu5();
+	double getHu6();
+	double getHu7();
 	double getHauteurRelative(double hChar);
 
 	// To Do

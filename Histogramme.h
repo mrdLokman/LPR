@@ -6,7 +6,7 @@
 #include <stdio.h>
 using namespace cv;
 using namespace std;
-Mat NormImage(Mat );
+Mat NormImage(Mat);
 Mat imgHist(Mat , float , float );
 
 
