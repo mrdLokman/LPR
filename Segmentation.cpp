@@ -300,7 +300,7 @@ vector<Composant> separartionComposantsChevauches(Composant composant,int largeu
 	while (i < s) {
 		// creation composant
 		Composant c = creerComposant(composant, debut, fin);
-		imshow("c", c.data); 
+		//imshow("c", c.data); 
 
 		//classification composant
 		map<string, double> data;
@@ -318,10 +318,10 @@ vector<Composant> separartionComposantsChevauches(Composant composant,int largeu
 		map<string, int> instance = cbn.interval(data);
 		cbn.classifier(instance, c, 0.85);
 
-		AfficheMap(c.probabilites_classes);
+		//AfficheMap(c.probabilites_classes);
 
 		if (c.probabilites_classes["caractere"] > 0.85) {
-			std::cout << "decide charactere" << endl << endl;
+			//std::cout << "decide charactere" << endl << endl;
 			sousComposants.push_back(c);
 
 			if (j < s) {
@@ -337,7 +337,7 @@ vector<Composant> separartionComposantsChevauches(Composant composant,int largeu
 			}
 		}
 		else {
-			cout << "n'est pas un charactere" << endl << endl;
+			//cout << "n'est pas un charactere" << endl << endl;
 			if (c.getLargeur() <= largeurMax) {
 				if (j < s) {
 					fin = positions[j];
@@ -357,8 +357,8 @@ vector<Composant> separartionComposantsChevauches(Composant composant,int largeu
 				}
 			}
 		}
-		waitKey(0);
-		destroyWindow("c");
+		//waitKey(0);
+		//destroyWindow("c");
 	}
 	return sousComposants;
 }
@@ -368,9 +368,11 @@ bool testFinSegmentation(){
 	return true;
 }
 
-int AutomateSegmentation(Mat plaque) {
+vector<Composant> AutomateSegmentation(Mat plaque) {
 	CBN cbn;
 	cbn.chargerReseau("data/dataR.txt");
+
+	vector<Composant> Finale;
 
 	double seuil = 0.85;
 
@@ -392,32 +394,34 @@ int AutomateSegmentation(Mat plaque) {
 			map<string, int> instance = cbn.interval(data);
 			cbn.classifier(instance, composants.at(i), seuil);
 			
+			/*
 			AfficheMap(composants.at(i).probabilites_classes);
 			cout << endl;
-
+			
 			imshow("img", composants.at(i).data);
 			waitKey(0);
 			destroyWindow("img");
-			
-
+			*/
 		}
 
-		system("pause");
+		//system("pause");
 
 		int nbrCharChev = 0,nbrChar = 0;
 		double HauteurMoy = 0,EpaisseurMoy = 0;
 		for (int i = 0; i < composants.size(); i++) {
 			if (composants.at(i).estDecide() && (composants.at(i).probabilites_classes["caractere"] > seuil || composants.at(i).probabilites_classes["chevauches"] > seuil)) {
 				HauteurMoy += composants.at(i).getHauteur();
+				/*
 				if (composants.at(i).probabilites_classes["caractere"] > seuil) {
 					EpaisseurMoy += composants.at(i).getEpaisseurMoyenne();
 					nbrChar++;
 				}
+				*/
 				nbrCharChev++;
 			}
 		}
 
-		cout << endl << "nbr decides caractere+chevauches " << nbrCharChev << " , nbr decides caracteres " << nbrChar << endl << endl;
+		//cout << endl << "nbr decides caractere+chevauches " << nbrCharChev << " , nbr decides caracteres " << nbrChar << endl << endl;
 
 		if (nbrCharChev != 0) {
 			HauteurMoy = HauteurMoy / nbrCharChev;
@@ -431,21 +435,24 @@ int AutomateSegmentation(Mat plaque) {
 					data["nbrContours"] = composants.at(i).getNbrContours();
 					data["hr"] = composants.at(i).getHauteurRelative(HauteurMoy);
 					
+					/*
 					if (nbrChar != 0) {
 						EpaisseurMoy = EpaisseurMoy / nbrChar;
-						//data["emr"] = composants.at(i).getEpaisseurMoyenneRelative(EpaisseurMoy);
+						data["emr"] = composants.at(i).getEpaisseurMoyenneRelative(EpaisseurMoy);
 					}
+					*/
 
 					map<string, int> instance = cbn.interval(data);
 					cbn.classifier(instance, composants.at(i), seuil);
-					
+
+					/*
 					AfficheMap(composants.at(i).probabilites_classes);
 					cout << endl;
 
 					imshow("img", composants.at(i).data);
 					waitKey(0);
 					destroyWindow("img");
-					
+					*/
 				}
 			}
 		}
@@ -462,7 +469,7 @@ int AutomateSegmentation(Mat plaque) {
 					if (largeurMax < composants.at(i).getLargeur())
 						largeurMax = composants.at(i).getLargeur();
 					nbrChar++;
-					EpaisseurMoy += composants.at(i).getEpaisseurMoyenne();
+					//EpaisseurMoy += composants.at(i).getEpaisseurMoyenne();
 					chars.push_back(composants.at(i).data);
 				}
 				HauteurMoy += composants.at(i).getHauteur();
@@ -470,7 +477,7 @@ int AutomateSegmentation(Mat plaque) {
 			}
 		}
 
-		imshow("Resultat-1", display_images(chars, 1000, 6));
+		imshow("Resultat-1", display_images(chars, 80, 1));
 		cout << "nbr caractere est : " << nbrChar << endl << endl;
 		waitKey(0);
 
@@ -503,6 +510,7 @@ int AutomateSegmentation(Mat plaque) {
 					for (int i = 0; i < sousComposants.size(); i++) {
 						nbrChar++;
 						chars.push_back(sousComposants.at(i).data);
+						Finale.push_back(sousComposants.at(i));
 						/*
 						AfficheMap(sousComposants.at(i).probabilites_classes);
 						std::cout << endl;
@@ -517,13 +525,18 @@ int AutomateSegmentation(Mat plaque) {
 				//waitKey(0);
 				destroyWindow("chevauche");
 			}
+			else {
+				if (composants.at(i).probabilites_classes["caractere"] > seuil)
+					Finale.push_back(composants.at(i));
+			}
 		}
-		imshow("Resultat-2", display_images(chars, 1000, 6));
+		imshow("Resultat-2", display_images(chars, 80, 1));
 		cout << endl << "nbr caractere est : " << nbrChar << endl;
+		waitKey(0);
 
 		finSegmentation = testFinSegmentation();
 	}
 
-	return 0;
+	return Finale;
 }
 

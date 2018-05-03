@@ -89,7 +89,21 @@ double Composant::getAttribut(string attributName, double parametre)
 	if (attributName == "cross")
 		return this->getCrossings();
 	if (attributName == "dtw")
-		return this->setDTW();
+		return this->getDTW();
+	if (attributName == "hu1")
+		return this->getHu1();
+	if (attributName == "hu2")
+		return this->getHu2();
+	if (attributName == "hu3")
+		return this->getHu3();
+	if (attributName == "hu4")
+		return this->getHu4();
+	if (attributName == "hu5")
+		return this->getHu5();
+	if (attributName == "hu6")
+		return this->getHu6();
+	if (attributName == "hu7")
+		return this->getHu7();
 }
 
 vector<double> Composant::getAll()
@@ -384,7 +398,7 @@ double Composant::getCrossings()
 	return 0.0;
 }
 
-double Composant::setDTW()
+double Composant::getDTW()
 {
 	return 0.0;
 }

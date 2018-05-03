@@ -19,7 +19,7 @@
 vector<Composant> segmentationProjection(Mat plaque);
 vector<Composant> segmentationACC(Mat plaque);
 
-int AutomateSegmentation(Mat plaque);
+vector<Composant> AutomateSegmentation(Mat plaque);
 
 
 vector<int> positionPossible(Mat data);

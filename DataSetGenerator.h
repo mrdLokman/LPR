@@ -16,9 +16,7 @@ void genererDataSetImagesV2(string carsFolder, string outImagesFolder);
 
 void genererDataSetAttributsTxt(string imagesFolder, string labelsFile, string dataFile, vector<string> attributs, bool type);
 
-void genererDataSetAttributsXml(string imagesFolder, string labelsFile, string dataFile, vector<string> attributs, bool type);
-
-void genererDataSetImagesXml(string imagesFolder, string labelsFile, string dataFile, vector<string> attributs, bool type);
+void genererDataSetImagesTxt(string imagesFolder, string labelsFile, string dataFile, bool type);
 
 void genererValeursAttribut(string carsFolder, string outFile, string Attribut, bool type);
 
@@ -27,7 +25,7 @@ void genererValeursAttribut(string carsFolder, string outFile, string Attribut, 
 
 int dataAttributs_TxtFileToXml(string dataSetD, string dataSetL, string dataFile, string labelsFile);
 
-int dataImageChiffres_ImgToXml(string folder, string dataFile, string labelsFile, int WIDTH, int HEIGHT);
+int dataImageChiffres_ImgToXml(string folder, string saveFolder, string dataFile, string labelsFile, int WIDTH, int HEIGHT);
 
 
 

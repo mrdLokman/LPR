@@ -26,7 +26,10 @@ public:
 	void setHeight(int h);
 
 	int GenerateData(string folder, string dataFile, string labelsFile);
-	int loadTrain(string dataFile, string labelsFile);
+
+	int loadDataset(string dataFile, string labelsFile);
+	bool train(string modelFile);
+
 	string predict(Mat img);
 	void load(string path);
 

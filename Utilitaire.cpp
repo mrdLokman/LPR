@@ -8,3 +8,7 @@ void AfficheMap(map<string, double> m) {
 		cout << attribut << " => " << valeur << endl;
 	}
 }
+
+bool ordre(Composant c1, Composant c2) {
+	return c1.debutX < c2.debutX;
+}

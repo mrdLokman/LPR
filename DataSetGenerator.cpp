@@ -244,12 +244,8 @@ void genererDataSetAttributsTxt(string imagesFolder, string labelsFile, string d
 	etiq.close();
 }
 
-void genererDataSetAttributsXml(string imagesFolder, string labelsFile, string dataFile, vector<string> attributs, bool type) {
-	// to do
-}
-
-void genererDataSetImagesXml(string imagesFolder, string labelsFile, string dataFile, vector<string> attributs, bool type) {
-	// to do
+void genererDataSetImagesTxt(string imagesFolder, string labelsFile, string dataFile, bool type) {
+	
 }
 
 void genererValeursAttribut(string carsFolder, string outFile, string Attribut, bool type) {
@@ -439,6 +435,60 @@ int dataImageChiffres_ImgToXml(string folder, string dataFile, string labelsFile
 		}
 	}
 
+	FileStorage fsClassifications(labelsFile, FileStorage::WRITE);
+	if (fsClassifications.isOpened() == false) {
+		std::cout << "error, unable to open training classifications file, exiting program\n\n";
+		return -1;
+	}
+	fsClassifications << "labels" << labels;
+	fsClassifications.release();
+
+	cv::FileStorage fsTrainingImages(dataFile, FileStorage::WRITE);
+
+	if (fsTrainingImages.isOpened() == false) {
+		std::cout << "error, unable to open training images file, exiting program\n\n";
+		return -1;
+	}
+	fsTrainingImages << "data" << data;
+	fsTrainingImages.release();
+
+	return 0;
+}
+
+int dataImageChiffres_ImgToXml(string folder, string saveFolder, string dataFile, string labelsFile, int WIDTH, int HEIGHT) {
+	Mat labels;
+	Mat data;
+
+	cv::String path(folder);
+	vector<cv::String> fn;
+	cv::glob(path, fn, true);
+
+	for (size_t k = 0; k < fn.size(); ++k) {
+		istringstream filePath(fn[k]);
+		string name;
+		getline(filePath, name, '\\');
+		getline(filePath, name, '\\');
+
+		int classe = name[1] - 48;
+
+		Composant c = nouveauComposant(fn[k]);
+
+		Mat src(c.data, Rect(c.debutX, c.debutY, c.finX-c.debutX+1, c.finY-c.debutY+1));
+		stringstream ss;
+		ss << saveFolder << classe << "_" << k << ".png";
+		imwrite(ss.str(), src);
+
+		Mat resized;
+		cv::resize(src, resized, Size(WIDTH, HEIGHT));
+		Mat imageFloat;
+		resized.convertTo(imageFloat, CV_32FC1);
+		Mat imageFlattenedFloat = imageFloat.reshape(1, 1);
+
+		data.push_back(imageFlattenedFloat);
+		labels.push_back(classe);
+
+	}
+	
 	FileStorage fsClassifications(labelsFile, FileStorage::WRITE);
 	if (fsClassifications.isOpened() == false) {
 		std::cout << "error, unable to open training classifications file, exiting program\n\n";

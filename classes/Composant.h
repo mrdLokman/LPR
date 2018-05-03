@@ -72,7 +72,7 @@ public:
 	// To Do
 	double getContourAproximationScores();
 	double getCrossings();
-	double setDTW();
+	double getDTW();
 };
 
 #endif

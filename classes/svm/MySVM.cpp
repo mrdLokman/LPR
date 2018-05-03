@@ -51,7 +51,7 @@ int MySVM::GenerateData(string folder, string dataFile, string labelsFile) {
 	return 0;
 }
 
-int MySVM::loadTrain(string dataFile, string labelsFile) {
+int MySVM::loadDataSet(string dataFile, string labelsFile) {
 
 	FileStorage fsClassifications(labelsFile, FileStorage::READ);
 	if (fsClassifications.isOpened() == false) {
@@ -74,18 +74,18 @@ int MySVM::loadTrain(string dataFile, string labelsFile) {
 	return 0;
 }
 
-bool MySVM::train()
+bool MySVM::train(string modelFile)
 {
-	bool trained=  svm->train(data, ml::ROW_SAMPLE, labels);
-	if(trained)this->svm->save("modelesXML/SVMsave.xml");
+	bool trained =  svm->train(data, ml::ROW_SAMPLE, labels);
+	if(trained)this->svm->save(modelFile);
 	return trained;
 }
 
-bool MySVM::trainAuto()
+bool MySVM::trainAuto(string modelFile)
 {
 	cv::Ptr<cv::ml::TrainData> td =cv::ml::TrainData::create(this->data, cv::ml::ROW_SAMPLE, this->labels);
 	bool trained=this->svm->trainAuto(td);
-	if(trained)this->svm->save("modelesXML/SVMsave.xml");
+	if(trained)this->svm->save(modelFile);
 	return trained;
 }
 
@@ -94,17 +94,11 @@ void MySVM::load(string path)
 	this->svm = Algorithm::load<SVM>(path);
 }
 
-string MySVM::predict(Mat img)
+string MySVM::predict(Mat data)
 {
-	Mat matResized;
-	cv::resize(img, matResized, cv::Size(WIDTH, HEIGHT));
-	Mat matFloat;
-	matResized.convertTo(matFloat, CV_32FC1);
-	cv::Mat matFlattenedFloat = matFloat.reshape(1, 1);
-
 	cv::Mat matChar(0, 0, CV_32F);
 
-	this->svm->predict(matFlattenedFloat, matChar);     // 
+	this->svm->predict(data, matChar);     // 
 	float floatResult = (float)matChar.at<float>(0, 0);
 	stringstream ss;
 	ss << floatResult;
@@ -127,7 +121,6 @@ MySVM::MySVM()
 	svm->setC(1.0000000000000001e-01);
 	svm->setTermCriteria(cvTermCriteria(CV_TERMCRIT_ITER, 100, 1e-6));
 }
-
 
 MySVM::~MySVM()
 {

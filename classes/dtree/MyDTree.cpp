@@ -50,7 +50,7 @@ int MyDTree::GenerateData(string folder, string dataFile, string labelsFile) {
 	return 0;
 }
 
-int MyDTree::loadTrain(string dataFile, string labelsFile) {
+int MyDTree::loadDataSet(string dataFile, string labelsFile) {
 
 	FileStorage fsClassifications(labelsFile, FileStorage::READ);
 	if (fsClassifications.isOpened() == false) {
@@ -73,11 +73,11 @@ int MyDTree::loadTrain(string dataFile, string labelsFile) {
 	return 0;
 }
 
-bool MyDTree::train()
+bool MyDTree::train(string modelFile)
 {
 	
 	bool trained=  dtree->train(data, ml::ROW_SAMPLE, labels);
-	if (trained)this->dtree->save("modelesXML/DTreesave.xml");
+	if (trained)this->dtree->save(modelFile);
 	return trained;
 }
 

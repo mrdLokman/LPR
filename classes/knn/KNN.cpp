@@ -63,7 +63,7 @@ int KNN::GenerateData(string folder, string dataFile, string labelsFile){
 	return 0;
 }
 
-int KNN::loadTrain(string dataFile, string labelsFile){
+int KNN::loadDataset(string dataFile, string labelsFile){
 
 	FileStorage fsClassifications(labelsFile, FileStorage::READ);
 	if (fsClassifications.isOpened() == false) {                                                   
@@ -83,24 +83,27 @@ int KNN::loadTrain(string dataFile, string labelsFile){
 	fsTrainingImages["data"] >> this->data;
 	fsTrainingImages.release();
 
-	Ptr<ml::KNearest>  knn(ml::KNearest::create());
-	this->kNearest = knn;
-	kNearest->train(data, ml::ROW_SAMPLE, labels);
+	
 	
 	return 0;
 }
 
-string KNN::predict(Mat img)
+bool KNN::train(string modelFile)
 {
-	Mat matResized;
-	cv::resize(img, matResized, cv::Size(WIDTH, HEIGHT));
-	Mat matFloat;
-	matResized.convertTo(matFloat, CV_32FC1);
-	cv::Mat matFlattenedFloat = matFloat.reshape(1, 1);
+	Ptr<ml::KNearest>  knn(ml::KNearest::create());
+	this->kNearest = knn;
+	bool trained = kNearest->train(data, ml::ROW_SAMPLE, labels);
 
+	if (trained)this->kNearest->save(modelFile);
+	return trained;
+}
+
+
+string KNN::predict(Mat data)
+{
 	cv::Mat matChar(0, 0, CV_32F);
 
-	this->kNearest->findNearest(matFlattenedFloat, 5, matChar);     // finally we can call find_nearest !!!
+	this->kNearest->findNearest(data, 5, matChar);     // finally we can call find_nearest !!!
 	float floatResult = (float)matChar.at<float>(0, 0);
 
 	stringstream ss;
