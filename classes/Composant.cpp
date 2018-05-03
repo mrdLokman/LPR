@@ -23,11 +23,16 @@ void Composant::setContourExterne()
 	threshold(m, m, 100, 255, CV_THRESH_BINARY_INV);
 	findContours(m, contours, hierarchy, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE, Point(0, 0));
 	this->contour_externe = contours[0];
+	this->hierarchie = hierarchy;
 }
 
 double Composant::getHauteur()
 {
 	return (double)(finY - debutY);
+}
+
+double Composant::getLargeur() {
+	return (double)this->data.cols;
 }
 
 bool Composant::estDecide() 
@@ -237,7 +242,91 @@ double Composant::getHauteurRelative(double hChar)
 	return attributs["hr"];
 }
 
+double Composant::getEpaisseurMoyenne() {
 
+	if (attributs.find("em") == attributs.end()) {
+		int nbrContour = this->contours.size();
+
+		vector<int> contournsExterns;
+		for (int i = 0; i < nbrContour; i++)
+			if (this->hierarchie[i][0] != -1)
+				contournsExterns.push_back(i);
+
+		int nbrContoursExterns = contournsExterns.size();
+
+		map<int, double> surfacesExterns;
+		map<int, double> perimetresExterns;
+
+		for (int i = 0; i < nbrContoursExterns; i++) {
+			surfacesExterns[i] = contourArea(this->contours[contournsExterns.at(i)]);
+			perimetresExterns[i] = arcLength(this->contours[contournsExterns.at(i)], true);
+		}
+
+		for (int i = 0; i < nbrContour; i++) {
+			int e = this->hierarchie[i][0];
+			if (surfacesExterns.find(e) != surfacesExterns.end()) {
+				surfacesExterns[e] = surfacesExterns[e] - contourArea(this->contours[i]);
+			}
+		}
+
+		double sommeSurfaces = 0.0;
+		double sommeperimetres = 0.0;
+
+		for (auto indice : contournsExterns) {
+			sommeSurfaces += surfacesExterns[indice];
+			sommeperimetres += perimetresExterns[indice];
+		}
+
+
+		attributs["em"] = (2 * sommeSurfaces) / (sommeperimetres);
+	}
+
+	return attributs["em"];
+}
+
+double Composant::getEpaisseurMoyenneRelative(double EChar) {
+
+	if (attributs.find("emr") == attributs.end()) {
+		if (attributs.find("em") == attributs.end()) {
+			int nbrContour = this->contours.size();
+
+			vector<int> contournsExterns;
+			for (int i = 0; i < nbrContour; i++)
+				if (this->hierarchie[i][0] != -1)
+					contournsExterns.push_back(i);
+
+			int nbrContoursExterns = contournsExterns.size();
+
+			map<int, double> surfacesExterns;
+			map<int, double> perimetresExterns;
+
+			for (int i = 0; i < nbrContoursExterns; i++) {
+				surfacesExterns[i] = contourArea(this->contours[contournsExterns.at(i)]);
+				perimetresExterns[i] = arcLength(this->contours[contournsExterns.at(i)], true);
+			}
+
+			for (int i = 0; i < nbrContour; i++) {
+				int e = this->hierarchie[i][0];
+				if (surfacesExterns.find(e) != surfacesExterns.end()) {
+					surfacesExterns[e] = surfacesExterns[e] - contourArea(this->contours[i]);
+				}
+			}
+
+			double sommeSurfaces = 0.0;
+			double sommeperimetres = 0.0;
+
+			for (auto indice : contournsExterns) {
+				sommeSurfaces += surfacesExterns[indice];
+				sommeperimetres += perimetresExterns[indice];
+			}
+
+			attributs["em"] = (2 * sommeSurfaces) / sommeperimetres;
+		}
+		attributs["emr"] = attributs["em"] / EChar;
+	}
+
+	return attributs["emr"];
+}
 
 double Composant::getContourAproximationScores()
 {

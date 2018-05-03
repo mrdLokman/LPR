@@ -7,5 +7,4 @@ void AfficheMap(map<string, double> m) {
 		double valeur = it->second;
 		cout << attribut << " => " << valeur << endl;
 	}
-	cout << endl;
 }

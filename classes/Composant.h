@@ -21,7 +21,7 @@ public:
 	map<string, double> probabilites_classes;
 	bool decision = false;
 	vector<vector<cv::Point>>contours;
-	//vector<Vec4i> hierarchie;
+	vector<Vec4i> hierarchie;
 	vector<cv::Point>contour_externe;
 	int ordreHorizontal;
 	double debutX;
@@ -35,6 +35,7 @@ public:
 	void setContourExterne();
 
 	double getHauteur();
+	double getLargeur();
 
 	bool estDecide();
 
@@ -57,6 +58,8 @@ public:
 	double getM21();
 	double getM12();
 	double getHauteurRelative(double hChar);
+	double getEpaisseurMoyenneRelative(double EChar = 1.0);
+	double getEpaisseurMoyenne();
 
 	// To Do
 	double getContourAproximationScores();

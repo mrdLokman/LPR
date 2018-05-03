@@ -11,7 +11,7 @@ Mat imgHist(Mat hist, float scaleX = 1, float scaleY = 1) {
 	minMaxLoc(hist, 0, &maxVal, 0, 0);
 	int rows = 64; //default height size
 	int cols = hist.rows; //get the width size from the histogram
-	Mat histImg = Mat::zeros(rows*scaleX, cols*scaleY, CV_8UC3);
+	Mat histImg(rows*scaleX, cols*scaleY, CV_8UC3, Scalar(255,255,255));
 	//for each bin
 	for (int i = 0; i<cols - 1; i++) {
 		float histValue = hist.at<float>(i, 0);
@@ -24,7 +24,7 @@ Mat imgHist(Mat hist, float scaleX = 1, float scaleY = 1) {
 		int numPts = 5;
 		Point pts[] = { pt1, pt2, pt3, pt4, pt1 };
 
-		fillConvexPoly(histImg, pts, numPts, Scalar(255, 255, 255));
+		fillConvexPoly(histImg, pts, numPts, Scalar(0, 0, 0));
 	}
 	return histImg;
 }

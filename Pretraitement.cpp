@@ -504,7 +504,7 @@ Mat operationsMorphologiques(Mat origine) {
 	//return opning_bin;
 }
 
-Mat unsharpFiltre(Mat origine) {
+Mat unsharpFiltre2(Mat origine) {
 	Mat blurred, blurred1;
 	double thresholdBilateral = 2, amountBilateral = 8;
 	int winSize = 17, segmaColor = 80, segmaSpace = 80;
@@ -539,7 +539,7 @@ Mat unsharpFiltre(Mat origine) {
 	return sharpened;
 }
 
-Mat unsharpFiltre2(Mat origine) {
+Mat unsharpFiltre(Mat origine) {
 	Mat blured, sharped;
 	GaussianBlur(origine, blured, cv::Size(0, 0), 3);
 	addWeighted(origine, 3, blured, -2, 0, sharped);

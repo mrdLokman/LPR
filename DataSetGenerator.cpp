@@ -93,7 +93,7 @@ void genererDataSetImagesV2(string carsFolder, string outImagesFolder) {
 	cv::String path(carsFolder);
 	vector<cv::String> fn;
 	cv::glob(path, fn, true);
-	for (size_t k = 0; k < fn.size(); ++k)
+	for (size_t k = 131; k < fn.size(); ++k)
 	{
 		cv::Mat src = cv::imread(fn[k], 0);
 
