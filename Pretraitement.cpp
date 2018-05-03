@@ -543,6 +543,7 @@ Mat unsharpFiltre(Mat origine) {
 	Mat blured, sharped;
 	GaussianBlur(origine, blured, cv::Size(0, 0), 3);
 	addWeighted(origine, 3, blured, -2, 0, sharped);
+	imshow("sharpened", sharped);
 	return sharped;
 }
 

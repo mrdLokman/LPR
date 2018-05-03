@@ -25,6 +25,16 @@ void Composant::setContourExterne()
 	this->contour_externe = contours[0];
 	this->hierarchie = hierarchy;
 }
+void Composant::calcHuMoments() {
+	if (this->contour_externe.empty())setContourExterne();
+	cv::Moments mom = cv::moments(this->contour_externe, true);
+	double hu[7];
+	cv::HuMoments(mom, hu);// now in hu are your 7 Hu-Moments
+	for (int i = 0; i < 7; i++)
+	{
+		this->huMoments.push_back(hu[i]);
+	}
+}
 
 double Composant::getHauteur()
 {
@@ -232,7 +242,43 @@ double Composant::getM12()
 	}
 	return this->attributs["m12"];
 }
-
+//moments de hu
+double Composant::getHu1() {
+	if (this->huMoments.empty()) calcHuMoments();
+	this->attributs["hu1"] = this->huMoments[0];
+	return huMoments[0];
+}
+double Composant::getHu2() {
+	if (huMoments.empty()) calcHuMoments();
+	this->attributs["hu2"] = huMoments[1];
+	return huMoments[1];
+}
+double Composant::getHu3() {
+	if (huMoments.empty()) calcHuMoments();
+	this->attributs["hu3"] = huMoments[2];
+	return huMoments[2];
+}
+double Composant::getHu4() {
+	if (huMoments.empty()) calcHuMoments();
+	this->attributs["hu4"] = huMoments[3];
+	return huMoments[3];
+}
+double Composant::getHu5() {
+	if (huMoments.empty()) calcHuMoments();
+	this->attributs["hu5"] = huMoments[4];
+	return huMoments[4];
+}
+double Composant::getHu6() {
+	if (huMoments.empty()) calcHuMoments();
+	this->attributs["hu6"] = huMoments[5];
+	return huMoments[5];
+}
+double Composant::getHu7() {
+	if (huMoments.empty()) calcHuMoments();
+	this->attributs["hu7"] = huMoments[6];
+	return huMoments[6];
+}
+//**************
 double Composant::getHauteurRelative(double hChar)
 {
 	if (attributs.find("hr") == attributs.end()) {
